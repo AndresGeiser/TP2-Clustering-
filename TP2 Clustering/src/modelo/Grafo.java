@@ -6,31 +6,37 @@ import java.util.Set;
 public class Grafo
 {
 	// Representamos el grafo por su matriz de adyacencia
-	private boolean[][] A;
+	private double[][] A;
 	
-	// El conjunto de vÈrtices est· fijo
+	// El conjunto de v√©rtices est√° fijo
 	public Grafo(int vertices)
 	{
-		A = new boolean[vertices][vertices];
+		A = new double[vertices][vertices];
 	}
 	
 	// Operaciones sobre aristas
-	public void agregarArista(int i, int j)
+	public void agregarArista(int i, int j, double distancia)
 	{
 		verificarIndices(i, j);
-		A[i][j] = A[j][i] = true;
+		A[i][j] = A[j][i] = distancia;
 	}
 	public void borrarArista(int i, int j)
 	{
 		verificarIndices(i, j);
-		A[i][j] = A[j][i] = false;
+		A[i][j] = A[j][i] = 0;
 	}
 	public boolean existeArista(int i, int j)
 	{
 		verificarIndices(i, j);
-		return A[i][j];
+		return A[i][j] == A[j][i];
 	}
 
+	public double obtenerPeso(int i, int j)
+	{
+		verificarIndices(i, j);
+		return A[i][j];
+	}
+	
 	// Vecinos de un vertice
 	public Set<Integer> vecinos(int i)
 	{
@@ -49,7 +55,7 @@ public class Grafo
 		return A.length;
 	}
 
-	// Lanza excepciones si los Ìndices no son v·lidos
+	// Lanza excepciones si los √≠ndices no son v√°lidos
 	private void verificarIndices(int i, int j)
 	{
 		verificarVertice(i);
@@ -62,6 +68,18 @@ public class Grafo
 	{
 		if( i < 0 || i >= tamano() )
 			throw new IllegalArgumentException("El vertice " + i + " no existe!");
+	}
+
+	public void imprimir() {
+		for (int x=0; x < A.length; x++) {
+			  System.out.print("|");
+			  for (int y=0; y < A[x].length; y++) {
+			    System.out.print (A[x][y]);
+			    if (y!=A[x].length-1) System.out.print("\t");
+			  }
+			  System.out.println("|");
+			}
+		
 	}
 }
 
