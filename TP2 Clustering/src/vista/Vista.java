@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,7 +20,9 @@ public class Vista extends JFrame{
 	public JButton botonImportar;
 	private JPanel panelMapa;
 	public JMapViewer mapa;
-	
+	public MapPolygonImpl poligono;
+
+
 	/**
 	 * Create the application.
 	 */
@@ -53,6 +56,7 @@ public class Vista extends JFrame{
 		botonImportar.setToolTipText("Importar archivo");
 		botonImportar.setBounds(458, 11, 124, 23);
 		this.getContentPane().add(botonImportar);
+		
 		
 	}
 }
