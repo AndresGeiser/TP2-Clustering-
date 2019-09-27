@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-
 public class Modelo 
 {
 	private ArrayList<Coordinate> coordenadas;
@@ -34,7 +33,7 @@ public class Modelo
 		
 		for (int i=0; i < coordenadas.size() - 1; i++)
 		{
-			for(int j=i+1; j < coordenadas.size(); j++)
+			for(int j= i+1; j < coordenadas.size(); j++)
 			{
 				double pesoArista = distanciaEuclidiana(coordenadas.get(i) , coordenadas.get(j));
 				
@@ -56,7 +55,19 @@ public class Modelo
 	
 	private void grafoArbolMinimo() 
 	{
+		Prim agm = new Prim(grafo.getVertices());
+		double[][] arbol = agm.AlgPrim(grafo.getMatriz());
 		
+		
+		for (int x=0; x < arbol.length; x++) {
+			  System.out.print("|");
+			  for (int y=0; y < arbol[x].length; y++) {
+			    System.out.print (arbol[x][y]);
+			    if (y!=arbol[x].length-1) System.out.print("\t");
+			  }
+			  System.out.println("|");
+			
+		}
 	}
 	
 	
