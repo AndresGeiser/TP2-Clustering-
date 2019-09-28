@@ -6,16 +6,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
-import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
-
-import modelo.Grafo;
 import modelo.Modelo;
 import vista.Vista;
 
@@ -23,6 +16,8 @@ public class Controlador implements ActionListener
 {
 	private Modelo modelo;
 	private Vista vista;
+	
+	private int	yPanelGrafos = 0;
 	
 	public Controlador(Modelo modelo, Vista vista) 
 	{
@@ -51,6 +46,11 @@ public class Controlador implements ActionListener
 			modelo.armarGrafo();
 			
 			colocarPanelsito();
+		}
+		
+		if(e.getSource() == vista.botonNuevo) 
+		{
+			
 		}
 	}
 	
@@ -132,8 +132,10 @@ public class Controlador implements ActionListener
 	{
 		String nombre = JOptionPane.showInputDialog("Nombre: ");
 		
-		vista.panelGrafos.add(new Panelsito(nombre, modelo, vista));
+		vista.panelGrafos.add(new Panelsito(nombre, modelo, vista, yPanelGrafos));
 		vista.panelGrafos.updateUI();
+		
+		yPanelGrafos += 37;
 		
 		modelo = new Modelo();
 	}

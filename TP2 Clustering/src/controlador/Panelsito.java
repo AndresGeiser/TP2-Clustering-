@@ -1,9 +1,11 @@
 package controlador;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -30,45 +32,58 @@ public class Panelsito extends JPanel implements ActionListener
 	private MapPolygonImpl poligono;
 	private ArrayList<MapMarkerDot> coordenadas;
 	
-	public Panelsito(String nombre, Modelo modelo, Vista vista) 
+	public Panelsito(String nombre, Modelo modelo, Vista vista, int y) 
 	{
-		iniComponentes(nombre);
+		iniComponentes(nombre, y);
 		
 		this.modelo = modelo;
 		this.vista = vista;
 		
 		dibujarse();
-		
 	}
 
-	private void iniComponentes(String nombre) 
+	private void iniComponentes(String nombre, int y) 
 	{
-		this.setBounds(0, 0, 257, 37);
+		this.setBounds(0, y, 257, 37);
+		this.setBackground( new Color(26, 82, 118));
 		this.setLayout(null);
-
+		
 		grafoCheckBox = new JCheckBox(nombre);
+		grafoCheckBox.setBackground(new Color(26, 82, 118));
+		grafoCheckBox.setForeground(Color.WHITE);
 		grafoCheckBox.setBounds(6, 7, 97, 23);
 		grafoCheckBox.setToolTipText(nombre);
 		grafoCheckBox.setSelected(true);
+		grafoCheckBox.setFocusable(false);
 		this.add(grafoCheckBox);
 		
 		centrarGrafo = new JButton();
+		centrarGrafo.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
-		centrarGrafo.setFont(new Font("Tahoma", Font.PLAIN, 7));
+		centrarGrafo.setBackground(new Color(20, 143, 119));
 		centrarGrafo.setBounds(109, 7, 39, 23);
+		centrarGrafo.setFocusable(false);
 		this.add(centrarGrafo);
 		
+	
 		eliminarGrafo = new JButton();
+		eliminarGrafo.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
+		eliminarGrafo.setBackground(new Color(20, 143, 119));
 		eliminarGrafo.setBounds(149, 7, 29, 23);
+		eliminarGrafo.setFocusable(false);
 		this.add(eliminarGrafo);
 		
 		clusters = new JTextField();
-		clusters.setBounds(179, 8, 38, 20);
+		clusters.setBounds(179, 7, 38, 23);
 		this.add(clusters);
 		
-		clustering = new JButton("Clustering");
+		clustering = new JButton();
+		clustering.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconClustering.png")));
+		clustering.setToolTipText("clustering");
+		clustering.setBackground(new Color(20, 143, 119));
 		clustering.setBounds(218, 7, 29, 23);
+		clustering.setFocusable(false);
 		this.add(clustering);
 		
 		grafoCheckBox.addActionListener(this);
@@ -110,6 +125,7 @@ public class Panelsito extends JPanel implements ActionListener
 				coordenadas.get(i).setVisible(false);
 			
 			poligono.setVisible(false);
+
 	
 		}
 		
@@ -134,18 +150,24 @@ public class Panelsito extends JPanel implements ActionListener
 	
 	private void dibujarse() 
 	{
+		int R = (int)(Math.random()*256);
+		int G = (int)(Math.random()*256);
+		int B= (int)(Math.random()*256);
+		Color color = new Color(R, G, B);
+		
 		MapMarkerDot coordenada;
 		coordenadas = new ArrayList<MapMarkerDot>();
 		
 		for(Coordinate coor : modelo.coordenadas()) 
 		{
 			coordenada = new MapMarkerDot(coor);
-			
+			coordenada.setBackColor(color);
 			coordenadas.add(coordenada);
 			vista.mapa.addMapMarker(coordenada);
 		}
 		
 		poligono = new MapPolygonImpl(modelo.coordenadas());
+		poligono.setColor(color);
 		vista.mapa.addMapPolygon(poligono);
 		
 	}
