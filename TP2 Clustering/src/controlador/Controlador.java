@@ -17,8 +17,6 @@ public class Controlador implements ActionListener
 	private Modelo modelo;
 	private Vista vista;
 	
-	private int	yPanelGrafos = 0;
-	
 	public Controlador(Modelo modelo, Vista vista) 
 	{
 		this.modelo = modelo;
@@ -132,10 +130,8 @@ public class Controlador implements ActionListener
 	{
 		String nombre = JOptionPane.showInputDialog("Nombre: ");
 		
-		vista.panelGrafos.add(new Panelsito(nombre, modelo, vista, yPanelGrafos));
-		vista.panelGrafos.updateUI();
-		
-		yPanelGrafos += 37;
+		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
+		vista.panelDeControles.updateUI();
 		
 		modelo = new Modelo();
 	}

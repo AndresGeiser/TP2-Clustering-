@@ -18,7 +18,7 @@ import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import modelo.Modelo;
 import vista.Vista;
 
-public class Panelsito extends JPanel implements ActionListener
+public class PanelControl extends JPanel implements ActionListener
 {
 	private Modelo modelo;
 	private Vista vista;
@@ -32,9 +32,9 @@ public class Panelsito extends JPanel implements ActionListener
 	private MapPolygonImpl poligono;
 	private ArrayList<MapMarkerDot> coordenadas;
 	
-	public Panelsito(String nombre, Modelo modelo, Vista vista, int y) 
+	public PanelControl(String nombre, Modelo modelo, Vista vista) 
 	{
-		iniComponentes(nombre, y);
+		iniComponentes(nombre);
 		
 		this.modelo = modelo;
 		this.vista = vista;
@@ -42,9 +42,8 @@ public class Panelsito extends JPanel implements ActionListener
 		dibujarse();
 	}
 
-	private void iniComponentes(String nombre, int y) 
+	private void iniComponentes(String nombre) 
 	{
-		this.setBounds(0, y, 257, 37);
 		this.setBackground( new Color(26, 82, 118));
 		this.setLayout(null);
 		
@@ -58,7 +57,7 @@ public class Panelsito extends JPanel implements ActionListener
 		this.add(grafoCheckBox);
 		
 		centrarGrafo = new JButton();
-		centrarGrafo.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconCentrar.png")));
+		centrarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
 		centrarGrafo.setBackground(new Color(20, 143, 119));
 		centrarGrafo.setBounds(109, 7, 39, 23);
@@ -67,7 +66,7 @@ public class Panelsito extends JPanel implements ActionListener
 		
 	
 		eliminarGrafo = new JButton();
-		eliminarGrafo.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconCesto.png")));
+		eliminarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
 		eliminarGrafo.setBackground(new Color(20, 143, 119));
 		eliminarGrafo.setBounds(149, 7, 29, 23);
@@ -79,7 +78,7 @@ public class Panelsito extends JPanel implements ActionListener
 		this.add(clusters);
 		
 		clustering = new JButton();
-		clustering.setIcon(new ImageIcon(Panelsito.class.getResource("/iconos/iconClustering.png")));
+		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		clustering.setToolTipText("clustering");
 		clustering.setBackground(new Color(20, 143, 119));
 		clustering.setBounds(218, 7, 29, 23);
@@ -139,8 +138,8 @@ public class Panelsito extends JPanel implements ActionListener
 		
 		vista.mapa.removeMapPolygon(poligono);
 		vista.mapa.updateUI();
-		vista.panelGrafos.remove(this);
-		vista.panelGrafos.updateUI();
+		vista.panelDeControles.remove(this);
+		vista.panelDeControles.updateUI();
 	}
 	
 	private void centrarGrafo() 
@@ -155,9 +154,9 @@ public class Panelsito extends JPanel implements ActionListener
 		int B= (int)(Math.random()*256);
 		Color color = new Color(R, G, B);
 		
-		MapMarkerDot coordenada;
 		coordenadas = new ArrayList<MapMarkerDot>();
 		
+		MapMarkerDot coordenada;
 		for(Coordinate coor : modelo.coordenadas()) 
 		{
 			coordenada = new MapMarkerDot(coor);

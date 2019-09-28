@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+
 import java.awt.event.MouseAdapter;
 
 
@@ -24,8 +24,7 @@ public class Vista extends JFrame
 	public JButton botonExportar;
 	public JPanel panelMapa;
 	public JMapViewer mapa;
-	public JPanel panelGrafos;
-	public MapPolygonImpl poligono;
+	public PanelDeControles panelDeControles;
 
 	/**
 	 * Create the application.
@@ -64,9 +63,10 @@ public class Vista extends JFrame
 		scrollPane.setBorder(null);
 		getContentPane().add(scrollPane);
 		
-		panelGrafos = new JPanel();
-		scrollPane.setViewportView(panelGrafos);
-		panelGrafos.setBackground(new Color(26, 82, 118));
+		panelDeControles = new PanelDeControles();
+		scrollPane.setViewportView(panelDeControles);
+		panelDeControles.setBackground(new Color(26, 82, 118));
+		panelDeControles.setLayout(null);
 		
 		botonImportar = new JButton("Importar");
 		botonImportar.setFont(new Font("Times New Roman", Font.PLAIN, 12));
@@ -117,7 +117,6 @@ public class Vista extends JFrame
 		efectoHoverBoton(botonGuardar, verde1, verde2);
 		efectoHoverBoton(botonExportar, verde1, verde2);
 		efectoHoverBoton(botonNuevo, verde1, verde2);
-		panelGrafos.setLayout(null);
 		
 	}
 	
