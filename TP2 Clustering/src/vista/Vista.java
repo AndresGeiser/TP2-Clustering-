@@ -14,6 +14,8 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 
 import java.awt.event.MouseAdapter;
 import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class Vista extends JFrame
@@ -60,10 +62,10 @@ public class Vista extends JFrame
 		this.getContentPane().add(panelMapa);
 		
 		mapa = new JMapViewer();
-		mapa.setBorder(new LineBorder(rojo1, 4, true));
+		mapa.setBorder(new LineBorder(new Color(179, 182, 183), 4));
 		mapa.setBounds(0, 0, 438, 409);
 		mapa.setZoomContolsVisible(false);
-		mapa.setDisplayPosition(new Coordinate(-34.52133782929332,-58.70068073272705), 16);
+		mapa.setDisplayPosition(new Coordinate(-34.52133782929332,-58.70068073272705), 13);
 		panelMapa.setLayout(null);
 		panelMapa.add(mapa);
 		

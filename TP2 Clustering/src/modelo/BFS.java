@@ -47,8 +47,9 @@ public class BFS
 	private Set<Integer> vecinosNoMarcados(int i)
 	{
 		Set<Integer> ret = new HashSet<Integer>();
-		for(Integer j: grafo.vecinos(i) ) if( marcados[j] == false )
-			ret.add(j);
+		for(Integer j: grafo.vecinos(i) ) 
+			if( marcados[j] == false )
+				ret.add(j);
 		
 		return ret;
 	}

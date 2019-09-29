@@ -37,7 +37,6 @@ public class PanelControl extends JPanel implements ActionListener
 		this.modelo = modelo;
 		this.vista = vista;
 		iniComponentes(nombre);
-	
 		dibujarse();
 	}
 
@@ -149,7 +148,7 @@ public class PanelControl extends JPanel implements ActionListener
 	
 	private void centrarGrafo() 
 	{
-		
+		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
 	}
 	
 	private void dibujarse() 
@@ -173,6 +172,8 @@ public class PanelControl extends JPanel implements ActionListener
 		poligono = new MapPolygonImpl(modelo.coordenadas());
 		poligono.setColor(color);
 		vista.mapa.addMapPolygon(poligono);
+		
+		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
 		
 	}
 	

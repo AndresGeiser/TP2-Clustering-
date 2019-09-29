@@ -43,7 +43,7 @@ public class Controlador implements ActionListener
 			
 			modelo.armarGrafo();
 			
-			colocarPanelsito();
+			colocarPanelControl();
 		}
 		
 		if(e.getSource() == vista.botonNuevo) 
@@ -116,7 +116,7 @@ public class Controlador implements ActionListener
 			
 	}
 	
-	private void colocarPanelsito() 
+	private void colocarPanelControl() 
 	{
 		String nombre = JOptionPane.showInputDialog("Nombre: ");
 		
