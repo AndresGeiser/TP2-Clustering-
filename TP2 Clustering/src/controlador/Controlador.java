@@ -69,59 +69,45 @@ public class Controlador implements ActionListener
 		JFileChooser jf = new JFileChooser();
 		jf.showOpenDialog(vista);
 		
-		File file = jf.getSelectedFile();
-		
-		leerCoordenadas(file);
-		
-		
+		leerArchivo(jf.getSelectedFile());
 	}
 	
-	public void leerCoordenadas(File file) throws IOException
+	public void leerArchivo(File file) throws IOException
 	{	
-			StringBuilder x = new StringBuilder("");
-			StringBuilder y = new StringBuilder("");
+			String x ;
+			String y ;
 			
 			BufferedReader bf = new BufferedReader(new FileReader(file));
-			int caracter  = bf.read();
-			boolean hayEspacio = false;
-			int i = 0;
 			
-			while(caracter != -1 )
-			{	
-				
-				Coordinate coor;
-				while ( !hayEspacio)
-				{
-					x.append((char) caracter);
-					caracter = bf.read();
-					hayEspacio = true && ( (char)caracter == ' ' );	
-				}
-				
-				caracter = bf.read();
-
-				
-				if ( (char)caracter != '\n')
-				{
-					y.append((char) caracter);
-					hayEspacio = true;
-				}
+			String linea;
 			
-				else
+			boolean llegoAlEspacio;
+		
+			while(!(linea=bf.readLine()).equals(""))
+			{
+				llegoAlEspacio = false;
+				
+				x = "";
+				y = "";
+				
+				for(int i=0; i < linea.length(); i++) 
 				{
-					 coor = new Coordinate(Double.parseDouble(x.toString()), Double.parseDouble(y.toString()));
-					 modelo.agregarCoordenada(coor);
-					 x.setLength(0);
-					 y.setLength(0);
-					 hayEspacio = false;
-					 i++;
-					 					
-				}	
+					if(llegoAlEspacio == false) 
+					{
+						if(linea.charAt(i) != ' ')
+							x += linea.charAt(i);
+						else
+							llegoAlEspacio = true;
+					}
+					else
+						y += linea.charAt(i);
 					
-				if ( i >= 68)
-					break;
-
+				}
+				
+				modelo.agregarCoordenada(new Coordinate(Double.parseDouble(x), Double.parseDouble(y)));
+	
 			}
-			
+
 			bf.close();
 			
 	}
