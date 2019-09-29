@@ -82,7 +82,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		clustering = new JButton();
 		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
-		clustering.setToolTipText("clustering");
+		clustering.setToolTipText("Clustering");
 		clustering.setBackground(vista.bordo);
 		clustering.setBounds(218, 7, 29, 23);
 		clustering.setFocusable(false);
@@ -143,7 +143,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		vista.mapa.removeMapPolygon(poligono);
 		vista.mapa.updateUI();
-		vista.panelDeControles.remove(this);
+		vista.panelDeControles.eliminar(this);
 		vista.panelDeControles.updateUI();
 	}
 	
@@ -176,5 +176,8 @@ public class PanelControl extends JPanel implements ActionListener
 		
 	}
 	
-
+	public String nombre() 
+	{
+		return grafoCheckBox.getName();
+	}
 }
