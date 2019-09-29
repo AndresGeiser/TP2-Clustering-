@@ -92,6 +92,9 @@ public class Controlador implements ActionListener
 				
 				for(int i=0; i < linea.length(); i++) 
 				{
+					if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
+						i++;
+					
 					if(llegoAlEspacio == false) 
 					{
 						if(linea.charAt(i) != ' ')
@@ -101,6 +104,7 @@ public class Controlador implements ActionListener
 					}
 					else
 						y += linea.charAt(i);
+					
 					
 				}
 				
