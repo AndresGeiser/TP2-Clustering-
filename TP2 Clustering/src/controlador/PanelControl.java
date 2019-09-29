@@ -34,21 +34,20 @@ public class PanelControl extends JPanel implements ActionListener
 	
 	public PanelControl(String nombre, Modelo modelo, Vista vista) 
 	{
-		iniComponentes(nombre);
-		
 		this.modelo = modelo;
 		this.vista = vista;
-		
+		iniComponentes(nombre);
+	
 		dibujarse();
 	}
 
 	private void iniComponentes(String nombre) 
 	{
-		this.setBackground( new Color(26, 82, 118));
+		this.setBackground(vista.rojo2);
 		this.setLayout(null);
 		
 		grafoCheckBox = new JCheckBox(nombre);
-		grafoCheckBox.setBackground(new Color(26, 82, 118));
+		grafoCheckBox.setBackground(vista.rojo2);
 		grafoCheckBox.setForeground(Color.WHITE);
 		grafoCheckBox.setBounds(6, 7, 97, 23);
 		grafoCheckBox.setToolTipText(nombre);
@@ -59,18 +58,22 @@ public class PanelControl extends JPanel implements ActionListener
 		centrarGrafo = new JButton();
 		centrarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
-		centrarGrafo.setBackground(new Color(20, 143, 119));
+		centrarGrafo.setBackground(vista.bordo);
 		centrarGrafo.setBounds(109, 7, 39, 23);
 		centrarGrafo.setFocusable(false);
+		centrarGrafo.setBorderPainted(false);
+		vista.efectoHoverBoton(centrarGrafo, vista.rojo3, vista.bordo);
 		this.add(centrarGrafo);
 		
 	
 		eliminarGrafo = new JButton();
 		eliminarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
-		eliminarGrafo.setBackground(new Color(20, 143, 119));
+		eliminarGrafo.setBackground(vista.bordo);
 		eliminarGrafo.setBounds(149, 7, 29, 23);
 		eliminarGrafo.setFocusable(false);
+		eliminarGrafo.setBorderPainted(false);
+		vista.efectoHoverBoton(eliminarGrafo, vista.rojo3, vista.bordo);
 		this.add(eliminarGrafo);
 		
 		clusters = new JTextField();
@@ -80,9 +83,11 @@ public class PanelControl extends JPanel implements ActionListener
 		clustering = new JButton();
 		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		clustering.setToolTipText("clustering");
-		clustering.setBackground(new Color(20, 143, 119));
+		clustering.setBackground(vista.bordo);
 		clustering.setBounds(218, 7, 29, 23);
 		clustering.setFocusable(false);
+		clustering.setBorderPainted(false);
+		vista.efectoHoverBoton(clustering, vista.rojo3, vista.bordo);
 		this.add(clustering);
 		
 		grafoCheckBox.addActionListener(this);
