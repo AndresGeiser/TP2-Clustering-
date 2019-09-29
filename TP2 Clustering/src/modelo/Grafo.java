@@ -32,7 +32,7 @@ public class Grafo
 	public boolean existeArista(int i, int j)
 	{
 		verificarIndices(i, j);
-		return A[i][j] == A[j][i];
+		return A[i][j] > 0;
 	}
 
 	public double obtenerPeso(int i, int j)
@@ -47,7 +47,8 @@ public class Grafo
 		verificarVertice(i);
 		
 		Set<Integer> ret = new HashSet<Integer>();
-		for(int j=0; j<tamano(); ++j) if( i!=j && existeArista(i,j) )
+		for(int j=0; j<tamano(); ++j) 
+			if( i!=j && existeArista(i,j) )
 			ret.add(j);
 		
 		return ret;

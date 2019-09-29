@@ -55,19 +55,25 @@ public class Modelo
 	
 	private void grafoArbolMinimo() 
 	{
-		Prim agm = new Prim(grafo.getVertices());
-		double[][] arbol = agm.AlgPrim(grafo.getMatriz());
+		AGM grafoAGM = new AGM(grafo);
 		
+		grafo = grafoAGM.getGrafoAGM();
 		
-		for (int x=0; x < arbol.length; x++) {
-			  System.out.print("|");
-			  for (int y=0; y < arbol[x].length; y++) {
-			    System.out.print (arbol[x][y]);
-			    if (y!=arbol[x].length-1) System.out.print("\t");
-			  }
-			  System.out.println("|");
-			
-		}
+		grafo.imprimir();
+		
+//		Prim agm = new Prim(grafo.getVertices());
+//		double[][] arbol = agm.AlgPrim(grafo.getMatriz());
+//		
+//		
+//		for (int x=0; x < arbol.length; x++) {
+//			  System.out.print("|");
+//			  for (int y=0; y < arbol[x].length; y++) {
+//			    System.out.print (arbol[x][y]);
+//			    if (y!=arbol[x].length-1) System.out.print("\t");
+//			  }
+//			  System.out.println("|");
+//			
+//		}
 	}
 	
 	
