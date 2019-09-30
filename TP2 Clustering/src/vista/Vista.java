@@ -4,26 +4,20 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-
 import java.awt.event.MouseAdapter;
 import javax.swing.border.LineBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
-public class Vista extends JFrame
+public class Vista extends JFrame  
 {
-	public JButton botonNuevo;
-	public JButton botonGuardar;
-	public JButton botonImportar;
-	public JButton botonExportar;
+	public JButton botonNuevo, botonGuardar, botonBorrarUltimo, botonCancelar, botonImportar, botonExportar;
 	public JPanel panelMapa;
 	public JMapViewer mapa;
 	public PanelDeControles panelDeControles;
@@ -81,10 +75,9 @@ public class Vista extends JFrame
 		
 		botonImportar = new JButton("Importar");
 		botonImportar.setBorder(null);
-		botonImportar.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		botonImportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/iconImportar.png")));
-		botonImportar.setToolTipText("Importar coordenadas");
-		botonImportar.setBounds(458, 11, 124, 23);
+		botonImportar.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonImportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/importar24.png")));
+		botonImportar.setBounds(458, 11, 124, 28);
 		botonImportar.setBackground(rojo1);
 		botonImportar.setForeground(Color.WHITE);
 		botonImportar.setFocusable(false);
@@ -93,61 +86,92 @@ public class Vista extends JFrame
 		botonExportar = new JButton("Exportar");
 		botonExportar.setBorderPainted(false);
 		botonExportar.setBorder(null);
-		botonExportar.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		botonExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/iconExportar.png")));
-		botonExportar.setToolTipText("Exportar coordenadas");
-		botonExportar.setBounds(592, 11, 124, 23);
+		botonExportar.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/exportar24.png")));
+		botonExportar.setBounds(592, 11, 124, 28);
 		botonExportar.setBackground(rojo1);
 		botonExportar.setForeground(Color.WHITE);
 		botonExportar.setFocusable(false);;
-		getContentPane().add(botonExportar);
-		
-		botonGuardar = new JButton("Guardar");
-		botonGuardar.setBorderPainted(false);
-		botonGuardar.setBorder(null);
-		botonGuardar.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		botonGuardar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/iconGuardar.png")));
-		botonGuardar.setToolTipText("Guardar grafo");
-		botonGuardar.setBounds(592, 45, 124, 23);
-		botonGuardar.setBackground(rojo1);
-		botonGuardar.setForeground(Color.WHITE);
-		botonGuardar.setFocusable(false);
-		botonGuardar.setEnabled(false);
-		getContentPane().add(botonGuardar);
+		getContentPane().add(botonExportar);		
 		
 		botonNuevo = new JButton("Nuevo");
 		botonNuevo.setBorderPainted(false);
 		botonNuevo.setBorder(null);
-		botonNuevo.setFont(new Font("Times New Roman", Font.PLAIN, 12));
-		botonNuevo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/iconCursor.png")));
-		botonNuevo.setToolTipText("Nuevo grafo");
-		botonNuevo.setBounds(458, 45, 124, 23);
+		botonNuevo.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonNuevo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/puntero.png")));
+		botonNuevo.setBounds(458, 45, 124, 28);
 		botonNuevo.setBackground(rojo1);
 		botonNuevo.setForeground(Color.WHITE);
 		botonNuevo.setFocusable(false);
 		getContentPane().add(botonNuevo);
 		
-		efectoHoverBoton(botonImportar, rojo2, rojo1);
-		efectoHoverBoton(botonGuardar, rojo2, rojo1);
-		efectoHoverBoton(botonExportar, rojo2, rojo1);
-		efectoHoverBoton(botonNuevo, rojo2, rojo1);
+		botonGuardar = new JButton("");
+		botonGuardar.setBorderPainted(false);
+		botonGuardar.setBorder(null);
+		botonGuardar.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonGuardar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/guardar24.png")));
+		botonGuardar.setBounds(592, 45, 40, 28);
+		botonGuardar.setBackground(bordo);
+		botonGuardar.setForeground(Color.WHITE);
+		botonGuardar.setFocusable(false);
+		botonGuardar.setEnabled(false);
+		getContentPane().add(botonGuardar);
 		
-	}
-	
-	public void efectoHoverBoton(JButton boton, Color punteroEncima, Color punteroFuera) 
-	{
-		boton.addMouseListener(new MouseAdapter() 
+		botonBorrarUltimo = new JButton("");
+		botonBorrarUltimo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/deshacer24.png")));
+		botonBorrarUltimo.setForeground(Color.WHITE);
+		botonBorrarUltimo.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonBorrarUltimo.setFocusable(false);
+		botonBorrarUltimo.setEnabled(false);
+		botonBorrarUltimo.setBorderPainted(false);
+		botonBorrarUltimo.setBorder(null);
+		botonBorrarUltimo.setBackground(bordo);
+		botonBorrarUltimo.setBounds(634, 45, 40, 28);
+		getContentPane().add(botonBorrarUltimo);
+		
+		botonCancelar = new JButton("");
+		botonCancelar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/cruz24.png")));
+		botonCancelar.setForeground(Color.WHITE);
+		botonCancelar.setFont(new Font("Arial", Font.PLAIN, 13));
+		botonCancelar.setFocusable(false);
+		botonCancelar.setEnabled(false);
+		botonCancelar.setBorderPainted(false);
+		botonCancelar.setBorder(null);
+		botonCancelar.setBackground(bordo);
+		botonCancelar.setBounds(676, 45, 40, 28);
+		getContentPane().add(botonCancelar);
+		
+		MouseAdapter efectoHover = new MouseAdapter()
 		{
 			@Override
-			public void mouseEntered(MouseEvent arg0) 
+			public void mouseEntered(MouseEvent e) 
 			{
-				boton.setBackground(punteroEncima);
+				JButton boton = (JButton) e.getSource();
+				
+				if(boton.isEnabled()) 
+					boton.setBackground(rojo2);
+				
 			}
+		
 			@Override
 			public void mouseExited(MouseEvent e) 
 			{
-				boton.setBackground(punteroFuera);
+				JButton boton = (JButton) e.getSource();
+				if(boton.isEnabled()) 
+					boton.setBackground(rojo1);
+			
 			}
-		});
+		};
+		
+		botonImportar.addMouseListener(efectoHover);
+		botonExportar.addMouseListener(efectoHover);
+		botonNuevo.addMouseListener(efectoHover);
+		botonGuardar.addMouseListener(efectoHover);
+		botonCancelar.addMouseListener(efectoHover);
+		botonBorrarUltimo.addMouseListener(efectoHover);
+		
+		
 	}
+	
+
 }

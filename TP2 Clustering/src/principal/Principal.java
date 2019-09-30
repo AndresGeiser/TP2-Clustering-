@@ -4,7 +4,8 @@ import controlador.Controlador;
 import modelo.Modelo;
 import vista.Vista;
 
-public class Principal {
+public class Principal 
+{
 
 	public static void main(String[] args) 
 	{

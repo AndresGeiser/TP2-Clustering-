@@ -59,7 +59,7 @@ public class Modelo
 		
 		grafo = grafoAGM.getGrafoAGM();
 		
-//		grafo.imprimir();
+		grafo.imprimir();
 		
 //		Prim agm = new Prim(grafo.getVertices());
 //		double[][] arbol = agm.AlgPrim(grafo.getMatriz());

@@ -1,8 +1,10 @@
 package controlador;
+
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -42,11 +44,11 @@ public class PanelControl extends JPanel implements ActionListener
 
 	private void iniComponentes(String nombre) 
 	{
-		this.setBackground(vista.rojo2);
+		this.setBackground(new Color(62, 54, 54));
 		this.setLayout(null);
 		
 		grafoCheckBox = new JCheckBox(nombre);
-		grafoCheckBox.setBackground(vista.rojo2);
+		grafoCheckBox.setBackground(null);
 		grafoCheckBox.setForeground(Color.WHITE);
 		grafoCheckBox.setBounds(6, 7, 97, 23);
 		grafoCheckBox.setToolTipText(nombre);
@@ -57,22 +59,20 @@ public class PanelControl extends JPanel implements ActionListener
 		centrarGrafo = new JButton();
 		centrarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
-		centrarGrafo.setBackground(vista.bordo);
+		centrarGrafo.setBackground(null);
 		centrarGrafo.setBounds(109, 7, 39, 23);
 		centrarGrafo.setFocusable(false);
 		centrarGrafo.setBorderPainted(false);
-		vista.efectoHoverBoton(centrarGrafo, vista.rojo3, vista.bordo);
 		this.add(centrarGrafo);
 		
 	
 		eliminarGrafo = new JButton();
 		eliminarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
-		eliminarGrafo.setBackground(vista.bordo);
+		eliminarGrafo.setBackground(null);
 		eliminarGrafo.setBounds(149, 7, 29, 23);
 		eliminarGrafo.setFocusable(false);
 		eliminarGrafo.setBorderPainted(false);
-		vista.efectoHoverBoton(eliminarGrafo, vista.rojo3, vista.bordo);
 		this.add(eliminarGrafo);
 		
 		clusters = new JTextField();
@@ -82,12 +82,38 @@ public class PanelControl extends JPanel implements ActionListener
 		clustering = new JButton();
 		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		clustering.setToolTipText("Clustering");
-		clustering.setBackground(vista.bordo);
+		clustering.setBackground(null);
 		clustering.setBounds(218, 7, 29, 23);
 		clustering.setFocusable(false);
 		clustering.setBorderPainted(false);
-		vista.efectoHoverBoton(clustering, vista.rojo3, vista.bordo);
 		this.add(clustering);
+		
+		MouseAdapter efectoHover = new MouseAdapter()
+		{
+			@Override
+			public void mouseEntered(MouseEvent e) 
+			{
+				JButton boton = (JButton) e.getSource();
+				
+				if(boton.isEnabled()) 
+					boton.setBackground(new Color(102, 94, 94));
+				
+			}
+		
+			@Override
+			public void mouseExited(MouseEvent e) 
+			{
+				JButton boton = (JButton) e.getSource();
+				if(boton.isEnabled()) 
+					boton.setBackground(null);
+			
+			}
+		};
+		centrarGrafo.addMouseListener(efectoHover);
+		eliminarGrafo.addMouseListener(efectoHover);
+		clustering.addMouseListener(efectoHover);
+		
+		
 		
 		grafoCheckBox.addActionListener(this);
 		centrarGrafo.addActionListener(this);
@@ -128,8 +154,6 @@ public class PanelControl extends JPanel implements ActionListener
 				coordenadas.get(i).setVisible(false);
 			
 			poligono.setVisible(false);
-
-	
 		}
 		
 		vista.mapa.updateUI();
@@ -177,8 +201,5 @@ public class PanelControl extends JPanel implements ActionListener
 		
 	}
 	
-	public String nombre() 
-	{
-		return grafoCheckBox.getName();
-	}
+	
 }
