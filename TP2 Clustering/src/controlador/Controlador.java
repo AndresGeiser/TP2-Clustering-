@@ -208,9 +208,9 @@ public class Controlador implements ActionListener
 		String linea;
 		
 		boolean llegoAlEspacio;
-	
-		while(!(linea=bf.readLine()).equals(""))
+		while(!(linea=bf.readLine()).equals("") )
 		{
+			
 			llegoAlEspacio = false;
 			latitud = "";
 			longitud = "";

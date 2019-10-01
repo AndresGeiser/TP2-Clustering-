@@ -2,11 +2,14 @@ package controlador;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -16,6 +19,8 @@ import javax.swing.JTextField;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
+
 import modelo.Modelo;
 import vista.Vista;
 import javax.swing.border.MatteBorder;
@@ -203,6 +208,7 @@ public class PanelControl extends JPanel implements ActionListener
 		coordenadas = new ArrayList<MapMarkerDot>();
 		
 		MapMarkerDot coordenada;
+		
 		for(Coordinate coor : modelo.coordenadas()) 
 		{
 			coordenada = new MapMarkerDot(coor);
@@ -210,12 +216,24 @@ public class PanelControl extends JPanel implements ActionListener
 			coordenadas.add(coordenada);
 			vista.mapa.addMapMarker(coordenada);
 		}
+
+		for (int i = 0; i < modelo.coordenadas().size() - 1; i++) 
+		{
+			Coordinate origen = modelo.coordenadas().get(i);
+			
+			for (int j = i + 1; j < modelo.coordenadas().size() - 1; j++) 
+			{
+				Coordinate destino = modelo.coordenadas().get(j);
+				
+				ArrayList<Coordinate> route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino));
+				vista.mapa.addMapPolygon(new MapPolygonImpl(route));
+
+				
+			}
+					
+		}
 		
-		poligono = new MapPolygonImpl(modelo.coordenadas());
-		poligono.setColor(color);
-		vista.mapa.addMapPolygon(poligono);
-		
-		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
+			vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
 		
 	}
 }
