@@ -21,7 +21,7 @@ public class PanelDeControles extends JPanel
 		y += panelControl.getHeight();
 		
 		if(this.getComponents().length > 10)
-			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + 37));
+			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + panelControl.getHeight()));
 	}
 	
 	public void eliminar(PanelControl panelControl) 
@@ -43,12 +43,12 @@ public class PanelDeControles extends JPanel
 			{
 				if(i == 0 && componentes[i].getY() != 0)
 				{
-					componentes[i].setBounds(0, y, this.getWidth(), 37);
+					componentes[i].setBounds(componentes[i].getX(), y, this.getWidth(), componentes[i].getHeight());
 					y += componentes[i].getHeight();
 				}
 				else if(componentes[i].getY() != y)
 				{
-					componentes[i].setBounds(0, y, this.getWidth(), 37);
+					componentes[i].setBounds(componentes[i].getX(), y, this.getWidth(), componentes[i].getHeight());
 					y += componentes[i].getHeight();
 				}
 				else
@@ -57,7 +57,7 @@ public class PanelDeControles extends JPanel
 		}
 		
 		if(this.getComponents().length >= 10)
-			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() - 37));
+			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() - panelControl.getHeight()));
 	}
 	
 }

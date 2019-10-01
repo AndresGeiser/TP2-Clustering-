@@ -59,7 +59,7 @@ public class Vista extends JFrame
 		panelMapa.add(mapa);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(458, 143, 277, 314);
+		scrollPane.setBounds(458, 87, 277, 370);
 		scrollPane.setBorder(null);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
 		getContentPane().add(scrollPane);
