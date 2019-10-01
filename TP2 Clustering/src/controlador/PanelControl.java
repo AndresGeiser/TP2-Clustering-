@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -18,13 +19,16 @@ import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import modelo.Modelo;
 import vista.Vista;
 import javax.swing.border.MatteBorder;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class PanelControl extends JPanel implements ActionListener
 {
 	private Modelo modelo;
 	private Vista vista;
 	
-	private JTextField nombre, clusters;;
+	private JLabel nombre;
+	private JTextField clusters;;
 	private JCheckBox visibilidad;
 	private JButton centrarGrafo, eliminarGrafo, clustering;
 	
@@ -54,20 +58,20 @@ public class PanelControl extends JPanel implements ActionListener
 		visibilidad.setFocusable(false);
 		this.add(visibilidad);
 		
-		this.nombre = new JTextField(nombre);
-		this.nombre.setBounds(28, 7, 78, 23);
+		this.nombre = new JLabel(nombre);
+		this.nombre.setToolTipText(nombre);
+		this.nombre.setBounds(28, 7, 100, 23);
 		this.nombre.setBackground(null);
 		this.nombre.setForeground(Color.white);
 		this.nombre.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		this.nombre.setBorder(null);
-		this.nombre.setEditable(false);
 		this.add(this.nombre);
 	
 		centrarGrafo = new JButton();
 		centrarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
 		centrarGrafo.setBackground(null);
-		centrarGrafo.setBounds(120, 7, 29, 23);
+		centrarGrafo.setBounds(130, 7, 29, 23);
 		centrarGrafo.setFocusable(false);
 		centrarGrafo.setBorderPainted(false);
 		this.add(centrarGrafo);
@@ -76,20 +80,33 @@ public class PanelControl extends JPanel implements ActionListener
 		eliminarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
 		eliminarGrafo.setBackground(null);
-		eliminarGrafo.setBounds(150, 7, 29, 23);
+		eliminarGrafo.setBounds(160, 7, 29, 23);
 		eliminarGrafo.setFocusable(false);
 		eliminarGrafo.setBorderPainted(false);
 		this.add(eliminarGrafo);
 		
-		clusters = new JTextField();
-		clusters.setBounds(181, 7, 38, 23);
+		clusters = new JTextField(3);
+		clusters.addKeyListener(new KeyAdapter() 
+		{
+			@Override
+			public void keyTyped(KeyEvent arg0) 
+			{
+				if(clusters.getText().length() == 3)
+					arg0.consume();
+				
+				if(!Character.isDigit(arg0.getKeyChar()))
+					arg0.consume();
+			}
+		});
+		clusters.setBounds(191, 7, 30, 23);
+		clusters.setToolTipText("Max: " + modelo.coordenadas().size());
 		this.add(clusters);
 		
 		clustering = new JButton();
 		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		clustering.setToolTipText("Clustering");
 		clustering.setBackground(null);
-		clustering.setBounds(221, 7, 29, 23);
+		clustering.setBounds(223, 7, 29, 23);
 		clustering.setFocusable(false);
 		clustering.setBorderPainted(false);
 		this.add(clustering);
