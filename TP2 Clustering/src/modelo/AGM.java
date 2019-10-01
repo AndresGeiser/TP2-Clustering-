@@ -18,10 +18,9 @@ public class AGM
 		marcados[0] = true; //marco el inicial
 		
 		double aristaMinima = 0;
-		
 		int verticeMarcado = 0; //
 		int verticeNoMarcado = 0; //Guardaremos el vecino no marcado
-		
+	
 		while(todosMarcados() == false) /*Recorremos hasta que todos los vertices del grafo esten marcados*/
 		{
 			for(int i=0; i < marcados.length; i++) 
@@ -34,6 +33,7 @@ public class AGM
 						{
 							if(aristaMinima == 0) /*Condicion que solo entrara la primera vez para asignarle un valor distinto de 0 a aristaMinima*/
 							{
+								
 								aristaMinima = grafo.obtenerPeso(i, j);
 								verticeMarcado = i;
 								verticeNoMarcado = j;
@@ -49,7 +49,7 @@ public class AGM
 					}
 				}
 			}
-			
+		
 			grafoAGM.agregarArista(verticeMarcado, verticeNoMarcado, grafo.obtenerPeso(verticeMarcado, verticeNoMarcado));
 			marcados[verticeNoMarcado] = true;
 			aristaMinima = 0;
@@ -73,13 +73,15 @@ public class AGM
 
 	public static void main(String[] args) 
 	{	
-		Grafo grafo = new Grafo(5);
-		grafo.agregarArista(0, 1, 3);
-		grafo.agregarArista(0, 2, 10);
-		grafo.agregarArista(1, 2, 20);
-		grafo.agregarArista(2, 3, 8);
-		grafo.agregarArista(2, 4, 15);
-		grafo.agregarArista(3, 4, 4);
+		Grafo grafo = new Grafo(6);
+		grafo.agregarArista(0, 3, 7);
+		grafo.agregarArista(0, 2, 2);
+		grafo.agregarArista(2, 3, 20);
+		grafo.agregarArista(2, 4, 40);
+		grafo.agregarArista(3, 5, 3);
+		grafo.agregarArista(3, 4, 15);
+		grafo.agregarArista(1, 4, 4);
+		grafo.agregarArista(5, 1, 10);
 		
 		System.out.println("GRAFO INICIAL");
 		grafo.imprimir();

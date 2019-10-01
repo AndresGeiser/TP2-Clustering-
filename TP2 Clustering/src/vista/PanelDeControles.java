@@ -1,9 +1,8 @@
 package vista;
 
 import java.awt.Component;
-
+import java.awt.Dimension;
 import javax.swing.JPanel;
-
 import controlador.PanelControl;
 
 public class PanelDeControles extends JPanel
@@ -20,6 +19,9 @@ public class PanelDeControles extends JPanel
 		panelControl.setBounds(0, y, this.getWidth(), 37);
 		this.add(panelControl);
 		y += panelControl.getHeight();
+		
+		if(this.getComponents().length > 10)
+			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + 37));
 	}
 	
 	public void eliminar(PanelControl panelControl) 
@@ -53,6 +55,9 @@ public class PanelDeControles extends JPanel
 					y += componentes[i].getHeight();
 			}
 		}
+		
+		if(this.getComponents().length >= 10)
+			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() - 37));
 	}
 	
 }

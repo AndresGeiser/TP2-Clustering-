@@ -6,8 +6,8 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class Modelo 
 {
+	private Grafo grafo;
 	private ArrayList<Coordinate> coordenadas;
-	Grafo grafo;
 	
 	public Modelo()
 	{
@@ -30,7 +30,6 @@ public class Modelo
 	}
 	private void armarGrafoCompleto()
 	{
-		
 		for (int i=0; i < coordenadas.size() - 1; i++)
 		{
 			for(int j= i+1; j < coordenadas.size(); j++)
@@ -39,7 +38,6 @@ public class Modelo
 				
 				grafo.agregarArista(i, j, pesoArista);
 			}
-			
 		}
 	}
 	private double distanciaEuclidiana(Coordinate i, Coordinate j) 
@@ -56,28 +54,13 @@ public class Modelo
 	private void grafoArbolMinimo() 
 	{
 		AGM grafoAGM = new AGM(grafo);
-		
 		grafo = grafoAGM.getGrafoAGM();
 		
 		grafo.imprimir();
-		
-//		Prim agm = new Prim(grafo.getVertices());
-//		double[][] arbol = agm.AlgPrim(grafo.getMatriz());
-//		
-//		
-//		for (int x=0; x < arbol.length; x++) {
-//			  System.out.print("|");
-//			  for (int y=0; y < arbol[x].length; y++) {
-//			    System.out.print (arbol[x][y]);
-//			    if (y!=arbol[x].length-1) System.out.print("\t");
-//			  }
-//			  System.out.println("|");
-//			
-//		}
 	}
+
 	
-	
-	public void eliminarAristas(int n) 
+	public void clustering(int n) 
 	{
 		
 	}

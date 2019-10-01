@@ -1,38 +1,35 @@
 package controlador;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
-
 import modelo.Modelo;
 import vista.Vista;
+import javax.swing.border.MatteBorder;
 
 public class PanelControl extends JPanel implements ActionListener
 {
 	private Modelo modelo;
 	private Vista vista;
 	
-	private JCheckBox grafoCheckBox;
-	private JButton centrarGrafo;
-	private JButton eliminarGrafo;
-	private JTextField clusters;
-	private JButton clustering;
+	private JTextField nombre, clusters;;
+	private JCheckBox visibilidad;
+	private JButton centrarGrafo, eliminarGrafo, clustering;
 	
-	private MapPolygonImpl poligono;
 	private ArrayList<MapMarkerDot> coordenadas;
+	private MapPolygonImpl poligono;
 	
 	public PanelControl(String nombre, Modelo modelo, Vista vista) 
 	{
@@ -44,46 +41,55 @@ public class PanelControl extends JPanel implements ActionListener
 
 	private void iniComponentes(String nombre) 
 	{
+		this.setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
 		this.setBackground(new Color(62, 54, 54));
 		this.setLayout(null);
 		
-		grafoCheckBox = new JCheckBox(nombre);
-		grafoCheckBox.setBackground(null);
-		grafoCheckBox.setForeground(Color.WHITE);
-		grafoCheckBox.setBounds(6, 7, 97, 23);
-		grafoCheckBox.setToolTipText(nombre);
-		grafoCheckBox.setSelected(true);
-		grafoCheckBox.setFocusable(false);
-		this.add(grafoCheckBox);
+		visibilidad = new JCheckBox();
+		visibilidad.setBackground(null);
+		visibilidad.setForeground(Color.WHITE);
+		visibilidad.setBounds(6, 7, 21, 23);
+		visibilidad.setToolTipText(nombre);
+		visibilidad.setSelected(true);
+		visibilidad.setFocusable(false);
+		this.add(visibilidad);
 		
+		this.nombre = new JTextField(nombre);
+		this.nombre.setBounds(28, 7, 78, 23);
+		this.nombre.setBackground(null);
+		this.nombre.setForeground(Color.white);
+		this.nombre.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		this.nombre.setBorder(null);
+		this.nombre.setEditable(false);
+		this.add(this.nombre);
+	
 		centrarGrafo = new JButton();
 		centrarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		centrarGrafo.setToolTipText("Centrar");
 		centrarGrafo.setBackground(null);
-		centrarGrafo.setBounds(109, 7, 39, 23);
+		centrarGrafo.setBounds(120, 7, 29, 23);
 		centrarGrafo.setFocusable(false);
 		centrarGrafo.setBorderPainted(false);
 		this.add(centrarGrafo);
 		
-	
 		eliminarGrafo = new JButton();
 		eliminarGrafo.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		eliminarGrafo.setToolTipText("Eliminar");
 		eliminarGrafo.setBackground(null);
-		eliminarGrafo.setBounds(149, 7, 29, 23);
+		eliminarGrafo.setBounds(150, 7, 29, 23);
 		eliminarGrafo.setFocusable(false);
 		eliminarGrafo.setBorderPainted(false);
 		this.add(eliminarGrafo);
 		
 		clusters = new JTextField();
-		clusters.setBounds(179, 7, 38, 23);
+		clusters.setBounds(181, 7, 38, 23);
 		this.add(clusters);
 		
 		clustering = new JButton();
 		clustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		clustering.setToolTipText("Clustering");
 		clustering.setBackground(null);
-		clustering.setBounds(218, 7, 29, 23);
+		clustering.setBounds(221, 7, 29, 23);
 		clustering.setFocusable(false);
 		clustering.setBorderPainted(false);
 		this.add(clustering);
@@ -94,28 +100,24 @@ public class PanelControl extends JPanel implements ActionListener
 			public void mouseEntered(MouseEvent e) 
 			{
 				JButton boton = (JButton) e.getSource();
-				
-				if(boton.isEnabled()) 
-					boton.setBackground(new Color(102, 94, 94));
-				
+			
+				boton.setBackground(new Color(102, 94, 94));
 			}
 		
 			@Override
 			public void mouseExited(MouseEvent e) 
 			{
 				JButton boton = (JButton) e.getSource();
-				if(boton.isEnabled()) 
-					boton.setBackground(null);
-			
+				
+				boton.setBackground(null);
 			}
 		};
 		centrarGrafo.addMouseListener(efectoHover);
 		eliminarGrafo.addMouseListener(efectoHover);
 		clustering.addMouseListener(efectoHover);
 		
-		
-		
-		grafoCheckBox.addActionListener(this);
+	
+		visibilidad.addActionListener(this);
 		centrarGrafo.addActionListener(this);
 		eliminarGrafo.addActionListener(this);
 		clustering.addActionListener(this);
@@ -125,7 +127,7 @@ public class PanelControl extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() == grafoCheckBox)
+		if(e.getSource() == visibilidad)
 			activarODesactivar();
 		
 		if(e.getSource() == centrarGrafo)
@@ -133,7 +135,6 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		if(e.getSource() == eliminarGrafo)
 			eliminarGrafo();
-			
 		
 //		if(e.getSource() == clustering) POR AHORA ESTE NO HACE NADA
 		
@@ -141,7 +142,7 @@ public class PanelControl extends JPanel implements ActionListener
 	
 	private void activarODesactivar() 
 	{
-		if(grafoCheckBox.isSelected() == true)
+		if(visibilidad.isSelected() == true)
 		{
 			for(int i=0; i < coordenadas.size(); i++)
 				coordenadas.get(i).setVisible(true);
@@ -163,7 +164,7 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		for(int i=0; i < coordenadas.size(); i++) 
 			vista.mapa.removeMapMarker(coordenadas.get(i));
-		
+
 		vista.mapa.removeMapPolygon(poligono);
 		vista.mapa.updateUI();
 		vista.panelDeControles.eliminar(this);
@@ -200,6 +201,4 @@ public class PanelControl extends JPanel implements ActionListener
 		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
 		
 	}
-	
-	
 }
