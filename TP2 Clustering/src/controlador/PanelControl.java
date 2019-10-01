@@ -217,6 +217,7 @@ public class PanelControl extends JPanel implements ActionListener
 			vista.mapa.addMapMarker(coordenada);
 		}
 
+		//Se une cada coordenada contra las demas
 		for (int i = 0; i < modelo.coordenadas().size() - 1; i++) 
 		{
 			Coordinate origen = modelo.coordenadas().get(i);
@@ -225,8 +226,8 @@ public class PanelControl extends JPanel implements ActionListener
 			{
 				Coordinate destino = modelo.coordenadas().get(j);
 				
-				ArrayList<Coordinate> route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino));
-				vista.mapa.addMapPolygon(new MapPolygonImpl(route));
+				ArrayList<Coordinate> route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere 
+				vista.mapa.addMapPolygon(new MapPolygonImpl(route));                                              //tres coordenadas
 
 				
 			}
