@@ -30,7 +30,7 @@ public class Vista extends JFrame
 	public Vista() 
 	{
 		this.getContentPane().setBackground(gris2);
-		this.setBounds(100, 100, 776, 501);
+		this.setBounds(100, 100, 790, 501);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
@@ -79,7 +79,7 @@ public class Vista extends JFrame
 		btnImportar.setBorder(null);
 		btnImportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnImportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/importar24.png")));
-		btnImportar.setBounds(458, 11, 135, 28);
+		btnImportar.setBounds(458, 11, 150, 28);
 		btnImportar.setBackground(rojo1);
 		btnImportar.setForeground(Color.WHITE);
 		btnImportar.setFocusable(false);
@@ -90,7 +90,7 @@ public class Vista extends JFrame
 		btnExportar.setBorder(null);
 		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/exportar24.png")));
-		btnExportar.setBounds(600, 11, 135, 28);
+		btnExportar.setBounds(616, 11, 150, 28);
 		btnExportar.setBackground(rojo1);
 		btnExportar.setForeground(Color.WHITE);
 		btnExportar.setFocusable(false);
@@ -101,7 +101,7 @@ public class Vista extends JFrame
 		btnNuevo.setBorder(null);
 		btnNuevo.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnNuevo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/puntero.png")));
-		btnNuevo.setBounds(458, 45, 135, 28);
+		btnNuevo.setBounds(458, 45, 150, 28);
 		btnNuevo.setBackground(rojo1);
 		btnNuevo.setForeground(Color.WHITE);
 		btnNuevo.setFocusable(false);
@@ -112,7 +112,7 @@ public class Vista extends JFrame
 		btnGuardar.setBorder(null);
 		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnGuardar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/guardar24.png")));
-		btnGuardar.setBounds(600, 45, 45, 28);
+		btnGuardar.setBounds(616, 45, 50, 28);
 		btnGuardar.setBackground(bordo);
 		btnGuardar.setForeground(Color.WHITE);
 		btnGuardar.setFocusable(false);
@@ -128,7 +128,7 @@ public class Vista extends JFrame
 		btnDeshacer.setBorderPainted(false);
 		btnDeshacer.setBorder(null);
 		btnDeshacer.setBackground(bordo);
-		btnDeshacer.setBounds(645, 45, 45, 28);
+		btnDeshacer.setBounds(666, 45, 50, 28);
 		getContentPane().add(btnDeshacer);
 		
 		btnCancelar = new JButton("");
@@ -140,7 +140,7 @@ public class Vista extends JFrame
 		btnCancelar.setBorderPainted(false);
 		btnCancelar.setBorder(null);
 		btnCancelar.setBackground(bordo);
-		btnCancelar.setBounds(690, 45, 45, 28);
+		btnCancelar.setBounds(716, 45, 50, 28);
 		getContentPane().add(btnCancelar);
 		
 		

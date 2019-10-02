@@ -301,7 +301,6 @@ public class PanelControl extends JPanel implements ActionListener
 			}		
 		}
 		
-		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
 	}
 	
 	public void dibujarGrafoMinimo() 
