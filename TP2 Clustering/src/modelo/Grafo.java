@@ -1,6 +1,7 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,7 +9,7 @@ public class Grafo
 {
 	// Representamos el grafo por su matriz de adyacencia
 	private double[][] A;
-	private ArrayList<Double> listaVertices = new ArrayList<Double>();
+	private ArrayList<Arista> aristas = new ArrayList<Arista>();
 	
 	// El conjunto de vértices está fijo
 	public Grafo(int vertices)
@@ -22,7 +23,8 @@ public class Grafo
 		verificarIndices(i, j);
 		A[i][j] = A[j][i] = distancia;
 		
-		listaVertices.add(distancia);
+		aristas.add(new Arista(i, j, distancia));
+		
 	}
 	public void borrarArista(int i, int j)
 	{
@@ -96,9 +98,9 @@ public class Grafo
 		return A;
 	}
 	
-	public ArrayList<Double> getVertices()
+	public ArrayList<Arista> getAristas()
 	{
-		return listaVertices;
+		return aristas;
 	}
 	
 }

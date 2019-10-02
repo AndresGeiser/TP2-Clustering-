@@ -35,12 +35,12 @@ public class PanelControl extends JPanel implements ActionListener
 	private JLabel lblNombre;
 	private JTextField txtCantClusters;
 	private JCheckBox boxVisibilidad;
-	private JButton btnCentrar, btnEliminar, btnClustering, btnAGM;
+	private JButton btnCentrar, btnEliminar, btnClustering;
 	
 	private ArrayList<MapMarkerDot> puntos;
 	private ArrayList<MapPolygonImpl> poligonos;
 	
-	private Color color;
+	private Color colorGrafo;
 	
 	public PanelControl(String nombre, Modelo modelo, Vista vista) 
 	{
@@ -56,7 +56,7 @@ public class PanelControl extends JPanel implements ActionListener
 		int r = (int)(Math.random()*256);
 		int g = (int)(Math.random()*256);
 		int b = (int)(Math.random()*256);
-		color = new Color(r, g, b);
+		colorGrafo = new Color(r, g, b);
 	
 		this.setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
 		this.setBackground(this.vista.gris3);
@@ -64,7 +64,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		iniComponentes(nombre);
 		dibujarPuntos();
-		dibujarGrafoCompleto();
+		dibujarGrafo();
 	}
 
 	private void iniComponentes(String nombre) 
@@ -129,39 +129,7 @@ public class PanelControl extends JPanel implements ActionListener
 		btnClustering.setFocusable(false);
 		btnClustering.setBorderPainted(false);
 		this.add(btnClustering);
-		
-		btnAGM = new JButton();
-		btnAGM.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) 
-			{
-				if(btnAGM.getBackground() != vista.naranja1)
-					btnAGM.setBackground(vista.naranja1);
-				else
-					btnAGM.setBackground(vista.gris4);
-			}
 			
-			@Override
-			public void mouseEntered(MouseEvent e) 
-			{
-				if(btnAGM.getBackground() != vista.naranja1)
-					btnAGM.setBackground(vista.gris4);
-			}
-		
-			@Override
-			public void mouseExited(MouseEvent e) 
-			{
-				if(btnAGM.getBackground() != vista.naranja1)
-					btnAGM.setBackground(null);	
-			}
-		});
-		btnAGM.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconAGM.png")));
-		btnAGM.setFocusable(false);
-		btnAGM.setBorderPainted(false);
-		btnAGM.setBackground((Color) null);
-		btnAGM.setBounds(130, 7, 29, 23);
-		this.add(btnAGM);
-		
 		MouseAdapter efectoHover = new MouseAdapter()
 		{
 			@Override
@@ -188,7 +156,6 @@ public class PanelControl extends JPanel implements ActionListener
 		btnCentrar.addActionListener(this);
 		btnEliminar.addActionListener(this);
 		btnClustering.addActionListener(this);	
-		btnAGM.addActionListener(this);
 	}
 
 	@Override
@@ -202,30 +169,16 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		if(e.getSource() == btnEliminar)
 			eliminar();
-		
-		if(e.getSource() == btnAGM)
-		{
-			if(btnAGM.getBackground() != vista.naranja1) 
-			{
-				for(MapPolygonImpl poligono : poligonos)
-					vista.mapa.removeMapPolygon(poligono);
-				poligonos.clear();
-				
-				dibujarGrafoMinimo();
-			}
-			else
-			{
-				for(MapPolygonImpl poligono : poligonos)
-					vista.mapa.removeMapPolygon(poligono);
-				poligonos.clear();
-				
-				dibujarGrafoCompleto();
-			}
-		}
 
 		
-		//		if(e.getSource() == clustering) POR AHORA ESTE NO HACE NADA
-		
+		if(e.getSource() == btnClustering)
+		{	
+			modelo.clustering(0);
+			for(MapPolygonImpl poligono : poligonos)
+				vista.mapa.removeMapPolygon(poligono);
+			poligonos.clear();
+			dibujarGrafo();
+		}
 	}
 	
 	private void activarODesactivar() 
@@ -272,38 +225,13 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		for(MapMarkerDot punto : puntos) 
 		{
-			punto.setBackColor(color);
+			punto.setBackColor(colorGrafo);
 			vista.mapa.addMapMarker(punto);
 		}
 	}
 	
-	private void dibujarGrafoCompleto() 
-	{
-		//Se une cada coordenada contra las demas
-		Coordinate origen;
-		Coordinate destino;
-		ArrayList<Coordinate> route;
-		MapPolygonImpl poligon;
-		
-		for (int i = 0; i < modelo.getCoordenadas().size() -1; i++) 
-		{
-			origen = modelo.getCoordenadas().get(i);
-			
-			for (int j = i + 1; j < modelo.getCoordenadas().size(); j++) 
-			{
-				destino = modelo.getCoordenadas().get(j);
-				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
-				poligon = new MapPolygonImpl(route);
-				poligon.setColor(color);
-				vista.mapa.addMapPolygon(poligon);                     
-				poligonos.add(poligon);
-				
-			}		
-		}
-		
-	}
 	
-	public void dibujarGrafoMinimo() 
+	public void dibujarGrafo() 
 	{
 		Coordinate origen;
 		Coordinate destino;
@@ -313,7 +241,7 @@ public class PanelControl extends JPanel implements ActionListener
 		boolean marcados[] = new boolean[modelo.getCoordenadas().size()];
 		marcados[0] = true;
 		
-		while(todosMarcados(marcados) == false) 
+		while(todosMarcados(marcados) == false ) 
 		{
 			for(int i=0; i < marcados.length; i++) 
 			{
@@ -321,7 +249,7 @@ public class PanelControl extends JPanel implements ActionListener
 				
 				if(marcados[i]) /*Si esta marcado*/
 				{
-					for(Integer j : modelo.getGrafoMinimo().vecinos(i)) /*Recorremos sus vecinos*/
+					for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
 					{
 						destino = modelo.getCoordenadas().get(j);
 						
@@ -330,7 +258,7 @@ public class PanelControl extends JPanel implements ActionListener
 							destino = modelo.getCoordenadas().get(j);
 							route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
 							poligon = new MapPolygonImpl(route);
-							poligon.setColor(color);
+							poligon.setColor(colorGrafo);
 							vista.mapa.addMapPolygon(poligon);                     
 							poligonos.add(poligon);
 							marcados[j] = true;

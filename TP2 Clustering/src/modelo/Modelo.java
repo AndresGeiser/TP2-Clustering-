@@ -6,8 +6,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class Modelo 
 {
-	private Grafo grafoCompleto;
-	private Grafo grafoMinimo;
+	private Grafo grafo;
 	private ArrayList<Coordinate> coordenadas;
 	
 	public Modelo()
@@ -22,7 +21,7 @@ public class Modelo
 	
 	public void armarGrafo() 
 	{
-		grafoCompleto = new Grafo(coordenadas.size());
+		grafo = new Grafo(coordenadas.size());
 		
 		armarGrafoCompleto();
 		
@@ -37,7 +36,7 @@ public class Modelo
 			{
 				double pesoArista = distanciaEuclidiana(coordenadas.get(i) , coordenadas.get(j));
 				
-				grafoCompleto.agregarArista(i, j, pesoArista);
+				grafo.agregarArista(i, j, pesoArista);
 			}
 		}
 	}
@@ -54,14 +53,28 @@ public class Modelo
 	
 	private void grafoArbolMinimo() 
 	{
-		AGM grafoAGM = new AGM(grafoCompleto);
-		grafoMinimo = grafoAGM.getGrafoAGM();
-		
+		AGM grafoAGM = new AGM(grafo);
+		grafo = grafoAGM.getGrafoAGM();
 	}
 
 	
 	public void clustering(int n) 
 	{
+	
+		
+		Arista mayor = grafo.getAristas().get(0);
+		
+		for (int i = 0; i < grafo.getAristas().size(); i++) 
+		{
+			if (grafo.getAristas().get(i).getPeso() > mayor.getPeso())
+				mayor = grafo.getAristas().get(i);
+		}
+		
+		grafo.borrarArista(mayor.getVertice1(), mayor.getVertice2());
+		
+		
+		
+		
 		
 	}
 	
@@ -72,12 +85,7 @@ public class Modelo
 	
 	public Grafo getGrafo() 
 	{
-		return grafoCompleto;
+		return grafo;
 	}
-	
-	public Grafo getGrafoMinimo() 
-	{
-		return grafoMinimo;
-	}
-	
+		
 }
