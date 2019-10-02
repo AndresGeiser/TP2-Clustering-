@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -15,14 +17,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.MatteBorder;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
+
+import modelo.Grafo;
 import modelo.Modelo;
 import vista.Vista;
-import javax.swing.border.MatteBorder;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class PanelControl extends JPanel implements ActionListener
 {
@@ -32,10 +35,12 @@ public class PanelControl extends JPanel implements ActionListener
 	private JLabel lblNombre;
 	private JTextField txtCantClusters;
 	private JCheckBox boxVisibilidad;
-	private JButton btnCentrar, btnEliminar, btnClustering;
+	private JButton btnCentrar, btnEliminar, btnClustering, btnAGM;
 	
 	private ArrayList<MapMarkerDot> puntos;
 	private ArrayList<MapPolygonImpl> poligonos;
+	
+	private Color color;
 	
 	public PanelControl(String nombre, Modelo modelo, Vista vista) 
 	{
@@ -43,17 +48,23 @@ public class PanelControl extends JPanel implements ActionListener
 		this.vista = vista;
 		
 		puntos = new ArrayList<MapMarkerDot>();
-		for(Coordinate coord : modelo.coordenadas())
+		for(Coordinate coord : modelo.getCoordenadas())
 			puntos.add(new MapMarkerDot(coord));
 		
 		poligonos = new ArrayList<MapPolygonImpl>();
+		
+		int r = (int)(Math.random()*256);
+		int g = (int)(Math.random()*256);
+		int b = (int)(Math.random()*256);
+		color = new Color(r, g, b);
 	
 		this.setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
-		this.setBackground(vista.gris3);
+		this.setBackground(this.vista.gris3);
 		this.setLayout(null);
 		
 		iniComponentes(nombre);
-		dibujarse();
+		dibujarPuntos();
+		dibujarGrafoCompleto();
 	}
 
 	private void iniComponentes(String nombre) 
@@ -61,7 +72,6 @@ public class PanelControl extends JPanel implements ActionListener
 		this.lblNombre = new JLabel(nombre);
 		this.lblNombre.setToolTipText(nombre);
 		this.lblNombre.setBounds(28, 7, 100, 23);
-		this.lblNombre.setBackground(null);
 		this.lblNombre.setForeground(Color.white);
 		this.lblNombre.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		this.lblNombre.setBorder(null);
@@ -80,7 +90,7 @@ public class PanelControl extends JPanel implements ActionListener
 		btnCentrar.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		btnCentrar.setToolTipText("Centrar");
 		btnCentrar.setBackground(null);
-		btnCentrar.setBounds(130, 7, 29, 23);
+		btnCentrar.setBounds(160, 7, 29, 23);
 		btnCentrar.setFocusable(false);
 		btnCentrar.setBorderPainted(false);
 		this.add(btnCentrar);
@@ -89,7 +99,7 @@ public class PanelControl extends JPanel implements ActionListener
 		btnEliminar.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		btnEliminar.setToolTipText("Eliminar");
 		btnEliminar.setBackground(null);
-		btnEliminar.setBounds(160, 7, 29, 23);
+		btnEliminar.setBounds(191, 7, 29, 23);
 		btnEliminar.setFocusable(false);
 		btnEliminar.setBorderPainted(false);
 		this.add(btnEliminar);
@@ -107,18 +117,50 @@ public class PanelControl extends JPanel implements ActionListener
 					arg0.consume();
 			}
 		});
-		txtCantClusters.setBounds(191, 7, 30, 23);
-		txtCantClusters.setToolTipText("Max: " + modelo.coordenadas().size());
+		txtCantClusters.setBounds(222, 7, 30, 23);
+		txtCantClusters.setToolTipText("Max: " + modelo.getCoordenadas().size());
 		this.add(txtCantClusters);
 		
 		btnClustering = new JButton();
 		btnClustering.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconClustering.png")));
 		btnClustering.setToolTipText("Clustering");
 		btnClustering.setBackground(null);
-		btnClustering.setBounds(223, 7, 29, 23);
+		btnClustering.setBounds(253, 7, 29, 23);
 		btnClustering.setFocusable(false);
 		btnClustering.setBorderPainted(false);
 		this.add(btnClustering);
+		
+		btnAGM = new JButton();
+		btnAGM.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) 
+			{
+				if(btnAGM.getBackground() != vista.naranja1)
+					btnAGM.setBackground(vista.naranja1);
+				else
+					btnAGM.setBackground(vista.gris4);
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) 
+			{
+				if(btnAGM.getBackground() != vista.naranja1)
+					btnAGM.setBackground(vista.gris4);
+			}
+		
+			@Override
+			public void mouseExited(MouseEvent e) 
+			{
+				if(btnAGM.getBackground() != vista.naranja1)
+					btnAGM.setBackground(null);	
+			}
+		});
+		btnAGM.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconAGM.png")));
+		btnAGM.setFocusable(false);
+		btnAGM.setBorderPainted(false);
+		btnAGM.setBackground((Color) null);
+		btnAGM.setBounds(130, 7, 29, 23);
+		this.add(btnAGM);
 		
 		MouseAdapter efectoHover = new MouseAdapter()
 		{
@@ -141,13 +183,12 @@ public class PanelControl extends JPanel implements ActionListener
 		btnCentrar.addMouseListener(efectoHover);
 		btnEliminar.addMouseListener(efectoHover);
 		btnClustering.addMouseListener(efectoHover);
-		
 	
 		boxVisibilidad.addActionListener(this);
 		btnCentrar.addActionListener(this);
 		btnEliminar.addActionListener(this);
-		btnClustering.addActionListener(this);
-		
+		btnClustering.addActionListener(this);	
+		btnAGM.addActionListener(this);
 	}
 
 	@Override
@@ -162,7 +203,28 @@ public class PanelControl extends JPanel implements ActionListener
 		if(e.getSource() == btnEliminar)
 			eliminar();
 		
-//		if(e.getSource() == clustering) POR AHORA ESTE NO HACE NADA
+		if(e.getSource() == btnAGM)
+		{
+			if(btnAGM.getBackground() != vista.naranja1) 
+			{
+				for(MapPolygonImpl poligono : poligonos)
+					vista.mapa.removeMapPolygon(poligono);
+				poligonos.clear();
+				
+				dibujarGrafoMinimo();
+			}
+			else
+			{
+				for(MapPolygonImpl poligono : poligonos)
+					vista.mapa.removeMapPolygon(poligono);
+				poligonos.clear();
+				
+				dibujarGrafoCompleto();
+			}
+		}
+
+		
+		//		if(e.getSource() == clustering) POR AHORA ESTE NO HACE NADA
 		
 	}
 	
@@ -203,34 +265,33 @@ public class PanelControl extends JPanel implements ActionListener
 	
 	private void centrar() 
 	{
-		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
+		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
 	}
 	
-	private void dibujarse() 
+	private void dibujarPuntos() 
 	{
-		int r = (int)(Math.random()*256);
-		int g = (int)(Math.random()*256);
-		int b = (int)(Math.random()*256);
-		Color color = new Color(r, g, b);
-		
 		for(MapMarkerDot punto : puntos) 
 		{
 			punto.setBackColor(color);
 			vista.mapa.addMapMarker(punto);
 		}
-		
+	}
+	
+	private void dibujarGrafoCompleto() 
+	{
 		//Se une cada coordenada contra las demas
 		Coordinate origen;
 		Coordinate destino;
 		ArrayList<Coordinate> route;
 		MapPolygonImpl poligon;
-		for (int i = 0; i < modelo.coordenadas().size() -1; i++) 
+		
+		for (int i = 0; i < modelo.getCoordenadas().size() -1; i++) 
 		{
-			origen = modelo.coordenadas().get(i);
+			origen = modelo.getCoordenadas().get(i);
 			
-			for (int j = i + 1; j < modelo.coordenadas().size(); j++) 
+			for (int j = i + 1; j < modelo.getCoordenadas().size(); j++) 
 			{
-				destino = modelo.coordenadas().get(j);
+				destino = modelo.getCoordenadas().get(j);
 				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
 				poligon = new MapPolygonImpl(route);
 				poligon.setColor(color);
@@ -240,6 +301,51 @@ public class PanelControl extends JPanel implements ActionListener
 			}		
 		}
 		
-		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
+		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
+	}
+	
+	public void dibujarGrafoMinimo() 
+	{
+		Coordinate origen;
+		Coordinate destino;
+		ArrayList<Coordinate> route;
+		MapPolygonImpl poligon;
+		
+		boolean marcados[] = new boolean[modelo.getCoordenadas().size()];
+		marcados[0] = true;
+		
+		while(todosMarcados(marcados) == false) 
+		{
+			for(int i=0; i < marcados.length; i++) 
+			{
+				origen = modelo.getCoordenadas().get(i);
+				
+				if(marcados[i]) /*Si esta marcado*/
+				{
+					for(Integer j : modelo.getGrafoMinimo().vecinos(i)) /*Recorremos sus vecinos*/
+					{
+						destino = modelo.getCoordenadas().get(j);
+						
+						if(marcados[j] == false) /*Si su vecino no esta marcado*/
+						{
+							destino = modelo.getCoordenadas().get(j);
+							route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
+							poligon = new MapPolygonImpl(route);
+							poligon.setColor(color);
+							vista.mapa.addMapPolygon(poligon);                     
+							poligonos.add(poligon);
+							marcados[j] = true;
+						}
+					}
+				}
+			}
+		}
+	}
+	private boolean todosMarcados(boolean[] marcados) 
+	{
+		for(boolean b : marcados) 
+			if(b == false)
+				return false;
+		return true;
 	}
 }

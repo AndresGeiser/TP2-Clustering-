@@ -25,12 +25,12 @@ public class Vista extends JFrame
 	public JMapViewer mapa;
 	public PanelDeControles panelDeControles;
 	
-	public Color gris1, gris2, gris3, rojo1, rojo2, rojo3, bordo;
+	public Color gris1, gris2, gris3, gris4, rojo1, rojo2, rojo3, bordo, naranja1, naranja2;
 	
 	public Vista() 
 	{
 		this.getContentPane().setBackground(gris2);
-		this.setBounds(100, 100, 759, 501);
+		this.setBounds(100, 100, 776, 501);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
@@ -42,7 +42,9 @@ public class Vista extends JFrame
 		rojo2 = new Color(225, 121, 121);
 		rojo3 = new Color(180, 51, 51);
 		bordo = new Color(116, 16, 16);
-		
+		naranja1 = new Color(220, 118, 51);
+		naranja2 = new Color(245, 176, 65);
+		gris4 = new Color(102, 94, 94);
 		iniComponentes();	
 	}
 
@@ -62,7 +64,7 @@ public class Vista extends JFrame
 		panelMapa.add(mapa);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(458, 87, 277, 370);
+		scrollPane.setBounds(458, 87, 308, 370);
 		scrollPane.setBorder(null);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
 		getContentPane().add(scrollPane);
