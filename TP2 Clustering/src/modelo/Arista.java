@@ -28,5 +28,11 @@ public class Arista
 		return peso;
 	}
 
-	
+	@Override
+	public String toString()
+	{
+		StringBuilder s = new StringBuilder();
+		
+		return s.append(vertice1 + " " + vertice2).toString();
+	}
 }

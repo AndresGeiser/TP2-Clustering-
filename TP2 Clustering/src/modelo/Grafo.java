@@ -26,10 +26,13 @@ public class Grafo
 		aristas.add(new Arista(i, j, distancia));
 		
 	}
-	public void borrarArista(int i, int j)
+	public void borrarArista(int i, int j, Arista arist)
 	{
 		verificarIndices(i, j);
 		A[i][j] = A[j][i] = 0;
+		
+		aristas.remove(arist);
+		
 	}
 	public boolean existeArista(int i, int j)
 	{

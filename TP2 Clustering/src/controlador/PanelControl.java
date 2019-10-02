@@ -105,6 +105,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.add(btnEliminar);
 		
 		txtCantClusters = new JTextField();
+		txtCantClusters.setText("1");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
 		{
 			@Override
@@ -118,7 +119,7 @@ public class PanelControl extends JPanel implements ActionListener
 			}
 		});
 		txtCantClusters.setBounds(222, 7, 30, 23);
-		txtCantClusters.setToolTipText("Max: " + modelo.getCoordenadas().size());
+		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()-1));
 		this.add(txtCantClusters);
 		
 		btnClustering = new JButton();
@@ -173,11 +174,17 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		if(e.getSource() == btnClustering)
 		{	
-			modelo.clustering(0);
-			for(MapPolygonImpl poligono : poligonos)
-				vista.mapa.removeMapPolygon(poligono);
-			poligonos.clear();
-			dibujarGrafo();
+			
+			if ( !txtCantClusters.getText().equals(""))
+			{	
+				modelo.clustering(Integer.parseInt(txtCantClusters.getText()));
+			
+				for(MapPolygonImpl poligono : poligonos)
+					vista.mapa.removeMapPolygon(poligono);
+			
+				poligonos.clear();
+				dibujarGrafo();
+			}
 		}
 	}
 	
@@ -237,42 +244,26 @@ public class PanelControl extends JPanel implements ActionListener
 		Coordinate destino;
 		ArrayList<Coordinate> route;
 		MapPolygonImpl poligon;
-		
-		boolean marcados[] = new boolean[modelo.getCoordenadas().size()];
-		marcados[0] = true;
-		
-		while(todosMarcados(marcados) == false ) 
-		{
-			for(int i=0; i < marcados.length; i++) 
-			{
-				origen = modelo.getCoordenadas().get(i);
 				
-				if(marcados[i]) /*Si esta marcado*/
+
+		for(int i=0; i < modelo.getCoordenadas().size(); i++) 
+		{
+				origen = modelo.getCoordenadas().get(i);
+					
+				for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
 				{
-					for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
-					{
-						destino = modelo.getCoordenadas().get(j);
-						
-						if(marcados[j] == false) /*Si su vecino no esta marcado*/
-						{
-							destino = modelo.getCoordenadas().get(j);
-							route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
-							poligon = new MapPolygonImpl(route);
-							poligon.setColor(colorGrafo);
-							vista.mapa.addMapPolygon(poligon);                     
-							poligonos.add(poligon);
-							marcados[j] = true;
-						}
-					}
+					destino = modelo.getCoordenadas().get(j);
+										
+					destino = modelo.getCoordenadas().get(j);
+					route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
+					poligon = new MapPolygonImpl(route);
+					poligon.setColor(colorGrafo);
+				    vista.mapa.addMapPolygon(poligon);                     
+				    poligonos.add(poligon);
+							
 				}
-			}
 		}
 	}
-	private boolean todosMarcados(boolean[] marcados) 
-	{
-		for(boolean b : marcados) 
-			if(b == false)
-				return false;
-		return true;
-	}
+
+	
 }

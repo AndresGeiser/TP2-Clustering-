@@ -57,25 +57,21 @@ public class Modelo
 		grafo = grafoAGM.getGrafoAGM();
 	}
 
-	
+	//Elimina las n aristas con mayor peso
 	public void clustering(int n) 
 	{
-	
-		
-		Arista mayor = grafo.getAristas().get(0);
-		
-		for (int i = 0; i < grafo.getAristas().size(); i++) 
+		for (int j = 0; j < n; j++) 
 		{
-			if (grafo.getAristas().get(i).getPeso() > mayor.getPeso())
-				mayor = grafo.getAristas().get(i);
+			Arista mayor = grafo.getAristas().get(0);
+			
+			for (int i = 0; i < grafo.getAristas().size(); i++) 
+			{
+				if (grafo.getAristas().get(i).getPeso() > mayor.getPeso())
+					mayor = grafo.getAristas().get(i);
+			}
+		
+			grafo.borrarArista(mayor.getVertice1(), mayor.getVertice2(), mayor);
 		}
-		
-		grafo.borrarArista(mayor.getVertice1(), mayor.getVertice2());
-		
-		
-		
-		
-		
 	}
 	
 	public ArrayList<Coordinate> getCoordenadas() 
