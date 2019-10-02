@@ -56,7 +56,6 @@ public class Modelo
 		AGM grafoAGM = new AGM(grafo);
 		grafo = grafoAGM.getGrafoAGM();
 		
-		//grafo.imprimir();
 	}
 
 	

@@ -27,13 +27,12 @@ public class PanelDeControles extends JPanel
 	public void eliminar(PanelControl panelControl) 
 	{
 		Component[] componentes = this.getComponents();
-		Component ultimoComponente = componentes[componentes.length-1];
 		
-		if(panelControl == ultimoComponente) 
+		if(panelControl == componentes[componentes.length-1]) 
 		{
 			this.remove(panelControl);
 			y -= panelControl.getHeight();
-		}
+		}	
 		else 
 		{
 			this.remove(panelControl);
@@ -43,12 +42,12 @@ public class PanelDeControles extends JPanel
 			{
 				if(i == 0 && componentes[i].getY() != 0)
 				{
-					componentes[i].setBounds(componentes[i].getX(), y, this.getWidth(), componentes[i].getHeight());
+					componentes[i].setBounds(componentes[i].getX(), y, componentes[i].getWidth(), componentes[i].getHeight());
 					y += componentes[i].getHeight();
 				}
 				else if(componentes[i].getY() != y)
 				{
-					componentes[i].setBounds(componentes[i].getX(), y, this.getWidth(), componentes[i].getHeight());
+					componentes[i].setBounds(componentes[i].getX(), y, componentes[i].getWidth(), componentes[i].getHeight());
 					y += componentes[i].getHeight();
 				}
 				else
