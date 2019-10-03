@@ -1,14 +1,18 @@
 package modelo;
 
+import java.util.ArrayList;
+
 public class AGM 
 {
 	private Grafo grafoAGM;
 	private boolean marcados[];
+	private ArrayList<Arista> aristas;
 	
 	public AGM(Grafo grafo) 
 	{
 		grafoAGM = new Grafo(grafo.tamano());
 		marcados = new boolean[grafo.tamano()];
+		aristas = new ArrayList<Arista>();
 		
 		generarAGM(grafo);
 	}
@@ -51,11 +55,11 @@ public class AGM
 			}
 		
 			grafoAGM.agregarArista(verticeMarcado, verticeNoMarcado, grafo.obtenerPeso(verticeMarcado, verticeNoMarcado));
+			aristas.add(new Arista(verticeMarcado, verticeNoMarcado, grafo.obtenerPeso(verticeMarcado, verticeNoMarcado)));
 			marcados[verticeNoMarcado] = true;
 			aristaMinima = 0;
 		}
 	}
-	
 	
 	private boolean todosMarcados() 
 	{
@@ -70,33 +74,9 @@ public class AGM
 		return grafoAGM;
 	}
 	
-
-	public static void main(String[] args) 
-	{	
-		Grafo grafo = new Grafo(6);
-		grafo.agregarArista(0, 3, 7);
-		grafo.agregarArista(0, 2, 2);
-		grafo.agregarArista(2, 3, 20);
-		grafo.agregarArista(2, 4, 40);
-		grafo.agregarArista(3, 5, 3);
-		grafo.agregarArista(3, 4, 15);
-		grafo.agregarArista(1, 4, 4);
-		grafo.agregarArista(5, 1, 10);
-		
-		System.out.println("GRAFO INICIAL");
-		grafo.imprimir();
-		
-		AGM grafoAGM = new AGM(grafo);
-		grafo = grafoAGM.getGrafoAGM();
-		
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
-		System.out.println("GRAFO MINIMO");
-		
-		grafo.imprimir();
-		
-	
+	public ArrayList<Arista> getAristas()
+	{
+		return aristas;
 	}
-
+	
 }

@@ -2,9 +2,9 @@ package modelo;
 
 public class Arista 
 {
-	int vertice1;
-	int vertice2;
-	double peso;
+	private int vertice1;
+	private int vertice2;
+	private double peso;
 	
 	public Arista(int vertice1, int vertice2, double peso) 
 	{

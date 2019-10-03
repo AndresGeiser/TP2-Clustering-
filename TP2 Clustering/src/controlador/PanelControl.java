@@ -10,20 +10,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.MatteBorder;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
-
-import modelo.Grafo;
 import modelo.Modelo;
 import vista.Vista;
 
@@ -105,7 +102,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.add(btnEliminar);
 		
 		txtCantClusters = new JTextField();
-		txtCantClusters.setText("1");
+		txtCantClusters.setText("0");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
 		{
 			@Override
@@ -119,7 +116,7 @@ public class PanelControl extends JPanel implements ActionListener
 			}
 		});
 		txtCantClusters.setBounds(222, 7, 30, 23);
-		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()-1));
+		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()));
 		this.add(txtCantClusters);
 		
 		btnClustering = new JButton();
@@ -170,19 +167,27 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		if(e.getSource() == btnEliminar)
 			eliminar();
-
 		
 		if(e.getSource() == btnClustering)
-		{	
-			
-			if ( !txtCantClusters.getText().equals(""))
-			{	
+			clustering();
+		
+	}
+
+	private void clustering() 
+	{
+		if (!txtCantClusters.getText().equals(""))
+		{
+			if(Integer.parseInt(txtCantClusters.getText()) > modelo.getCoordenadas().size())
+				JOptionPane.showMessageDialog(null, "Excediste el maximo de clusters", "Error", JOptionPane.WARNING_MESSAGE);
+				
+			else
+			{
 				modelo.clustering(Integer.parseInt(txtCantClusters.getText()));
-			
+				
 				for(MapPolygonImpl poligono : poligonos)
 					vista.mapa.removeMapPolygon(poligono);
-			
 				poligonos.clear();
+				
 				dibujarGrafo();
 			}
 		}
@@ -237,8 +242,7 @@ public class PanelControl extends JPanel implements ActionListener
 		}
 	}
 	
-	
-	public void dibujarGrafo() 
+	private void dibujarGrafo() 
 	{
 		Coordinate origen;
 		Coordinate destino;
@@ -248,20 +252,20 @@ public class PanelControl extends JPanel implements ActionListener
 
 		for(int i=0; i < modelo.getCoordenadas().size(); i++) 
 		{
-				origen = modelo.getCoordenadas().get(i);
-					
-				for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
-				{
-					destino = modelo.getCoordenadas().get(j);
-										
-					destino = modelo.getCoordenadas().get(j);
-					route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
-					poligon = new MapPolygonImpl(route);
-					poligon.setColor(colorGrafo);
-				    vista.mapa.addMapPolygon(poligon);                     
-				    poligonos.add(poligon);
-							
-				}
+			origen = modelo.getCoordenadas().get(i);
+				
+			for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
+			{
+				destino = modelo.getCoordenadas().get(j);
+									
+				destino = modelo.getCoordenadas().get(j);
+				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
+				poligon = new MapPolygonImpl(route);
+				poligon.setColor(colorGrafo);
+			    vista.mapa.addMapPolygon(poligon);                     
+			    poligonos.add(poligon);
+						
+			}
 		}
 	}
 

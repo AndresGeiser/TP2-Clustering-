@@ -1,12 +1,12 @@
 package modelo;
 
 import java.util.ArrayList;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class Modelo 
 {
 	private Grafo grafo;
+	private ArrayList<Arista> aristasGrafoOriginal = new ArrayList<Arista>();
 	private ArrayList<Coordinate> coordenadas;
 	
 	public Modelo()
@@ -55,22 +55,41 @@ public class Modelo
 	{
 		AGM grafoAGM = new AGM(grafo);
 		grafo = grafoAGM.getGrafoAGM();
+		aristasGrafoOriginal = grafoAGM.getAristas();
 	}
 
 	//Elimina las n aristas con mayor peso
 	public void clustering(int n) 
 	{
-		for (int j = 0; j < n; j++) 
-		{
-			Arista mayor = grafo.getAristas().get(0);
-			
-			for (int i = 0; i < grafo.getAristas().size(); i++) 
-			{
-				if (grafo.getAristas().get(i).getPeso() > mayor.getPeso())
-					mayor = grafo.getAristas().get(i);
-			}
+		armarGrafoOriginal();
+	
+		eliminarAristasMayores(n - 1);
+	}
+	
+	private void armarGrafoOriginal() 
+	{
+		for(Arista arista : aristasGrafoOriginal)
+			grafo.agregarArista(arista.getVertice1(), arista.getVertice2(), arista.getPeso());
 		
-			grafo.borrarArista(mayor.getVertice1(), mayor.getVertice2(), mayor);
+	}
+	
+
+	private void eliminarAristasMayores(int n) //'n' cantidad de aristas a borrar
+	{
+		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
+		Arista aristaMaxima = aristasAuxiliar.get(0);
+		
+		for(int i=0; i < n; i++) 
+		{
+			for(Arista arista : aristasAuxiliar)
+				if(arista.getPeso() > aristaMaxima.getPeso())
+					aristaMaxima = arista;
+	
+			grafo.borrarArista(aristaMaxima.getVertice1(), aristaMaxima.getVertice2());
+			aristasAuxiliar.remove(aristaMaxima);
+			
+			if(aristasAuxiliar.size() > 0)
+				aristaMaxima = aristasAuxiliar.get(0);
 		}
 	}
 	
