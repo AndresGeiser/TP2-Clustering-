@@ -56,7 +56,7 @@ public class Controlador implements ActionListener
 						Coordinate coord = (Coordinate) vista.mapa.getPosition(e.getPoint());
 						MapMarkerDot marca = new MapMarkerDot(coord);
 						
-						if(!esta(marca))
+						if(!estaMarcada(marca))
 						{	
 							vista.mapa.addMapMarker(marca);
 							marcasTemporales.add(marca);
@@ -64,6 +64,7 @@ public class Controlador implements ActionListener
 						
 						if(marcasTemporales.size() > 0)
 						{
+							//Activamos boton guardar y deshacer
 							vista.btnGuardar.setEnabled(true);
 							vista.btnGuardar.setBackground(vista.rojo1);
 							vista.btnDeshacer.setEnabled(true);
@@ -244,13 +245,18 @@ public class Controlador implements ActionListener
 		
 		String nombre = JOptionPane.showInputDialog("Nombre: ");
 		
+		if(nombre.equals(""))
+			nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
+		
 		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
 		vista.panelDeControles.updateUI();
 		
 		modelo = new Modelo();
 	}
 	
-	private boolean esta(MapMarkerDot coordenada) 
+	
+	//METODOS AUXILIARES
+	private boolean estaMarcada(MapMarkerDot coordenada) 
 	{
 		for(MapMarkerDot marca : marcasTemporales)
 			if(coordenada.getCoordinate().equals(marca.getCoordinate()))

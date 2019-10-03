@@ -44,6 +44,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.modelo = modelo;
 		this.vista = vista;
 		
+		//Colocamos los puntos en el mapa
 		puntos = new ArrayList<MapMarkerDot>();
 		for(Coordinate coord : modelo.getCoordenadas())
 			puntos.add(new MapMarkerDot(coord));
@@ -61,7 +62,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		iniComponentes(nombre);
 		dibujarPuntos();
-		dibujarGrafo();
+		dibujarAristas();
 	}
 
 	private void iniComponentes(String nombre) 
@@ -70,7 +71,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.lblNombre.setToolTipText(nombre);
 		this.lblNombre.setBounds(28, 7, 100, 23);
 		this.lblNombre.setForeground(Color.white);
-		this.lblNombre.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		this.lblNombre.setFont(new Font("Lucida Sans", Font.BOLD, 13));
 		this.lblNombre.setBorder(null);
 		this.add(this.lblNombre);
 		
@@ -78,7 +79,7 @@ public class PanelControl extends JPanel implements ActionListener
 		boxVisibilidad.setBackground(null);
 		boxVisibilidad.setForeground(Color.WHITE);
 		boxVisibilidad.setBounds(6, 7, 21, 23);
-		boxVisibilidad.setToolTipText(nombre);
+		boxVisibilidad.setToolTipText("Ocultar");
 		boxVisibilidad.setSelected(true);
 		boxVisibilidad.setFocusable(false);
 		this.add(boxVisibilidad);
@@ -102,7 +103,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.add(btnEliminar);
 		
 		txtCantClusters = new JTextField();
-		txtCantClusters.setText("0");
+		txtCantClusters.setText("1");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
 		{
 			@Override
@@ -178,8 +179,11 @@ public class PanelControl extends JPanel implements ActionListener
 		if (!txtCantClusters.getText().equals(""))
 		{
 			if(Integer.parseInt(txtCantClusters.getText()) > modelo.getCoordenadas().size())
-				JOptionPane.showMessageDialog(null, "Excediste el maximo de clusters", "Error", JOptionPane.WARNING_MESSAGE);
-				
+				JOptionPane.showMessageDialog(null, "Excediste el maximo de clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+			
+			else if(Integer.parseInt(txtCantClusters.getText()) == 0)
+				JOptionPane.showMessageDialog(null, "No puede haber 0 clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+			
 			else
 			{
 				modelo.clustering(Integer.parseInt(txtCantClusters.getText()));
@@ -188,11 +192,12 @@ public class PanelControl extends JPanel implements ActionListener
 					vista.mapa.removeMapPolygon(poligono);
 				poligonos.clear();
 				
-				dibujarGrafo();
+				dibujarAristas();
 			}
 		}
 	}
 	
+	//Metodo que desactiva o activa la visibilidad del grafo del mapa
 	private void activarODesactivar() 
 	{
 		if(boxVisibilidad.isSelected() == true)
@@ -202,6 +207,8 @@ public class PanelControl extends JPanel implements ActionListener
 			
 			for(int i=0; i < poligonos.size(); i++)
 				poligonos.get(i).setVisible(true);
+			
+			boxVisibilidad.setToolTipText("Ocultar");
 		}
 		else 
 		{
@@ -210,11 +217,14 @@ public class PanelControl extends JPanel implements ActionListener
 			
 			for(int i=0; i < poligonos.size(); i++)
 				poligonos.get(i).setVisible(false);
+			
+			boxVisibilidad.setToolTipText("Aparecer");
 		}
 		
 		vista.mapa.updateUI();
 	}
 	
+	//Metodo que elimina el grafo 
 	private void eliminar() 
 	{
 		for(int i=0; i < puntos.size(); i++) 
@@ -228,6 +238,7 @@ public class PanelControl extends JPanel implements ActionListener
 		vista.panelDeControles.updateUI();
 	}
 	
+	//Metodo que posiciona la ubicacion del mapa en un punto del grafo
 	private void centrar() 
 	{
 		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
@@ -242,29 +253,25 @@ public class PanelControl extends JPanel implements ActionListener
 		}
 	}
 	
-	private void dibujarGrafo() 
+	private void dibujarAristas() 
 	{
 		Coordinate origen;
 		Coordinate destino;
 		ArrayList<Coordinate> route;
 		MapPolygonImpl poligon;
-				
 
 		for(int i=0; i < modelo.getCoordenadas().size(); i++) 
 		{
 			origen = modelo.getCoordenadas().get(i);
 				
 			for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
-			{
-				destino = modelo.getCoordenadas().get(j);
-									
+			{						
 				destino = modelo.getCoordenadas().get(j);
 				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
 				poligon = new MapPolygonImpl(route);
 				poligon.setColor(colorGrafo);
 			    vista.mapa.addMapPolygon(poligon);                     
-			    poligonos.add(poligon);
-						
+			    poligonos.add(poligon);		
 			}
 		}
 	}
