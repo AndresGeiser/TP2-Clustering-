@@ -233,8 +233,8 @@ public class PanelControl extends JPanel implements ActionListener
 		for(int i=0; i < poligonos.size(); i++)
 			vista.mapa.removeMapPolygon(poligonos.get(i));
 
-		vista.mapa.updateUI();
 		vista.panelDeControles.eliminar(this);
+		vista.mapa.updateUI();
 		vista.panelDeControles.updateUI();
 	}
 	
@@ -274,6 +274,8 @@ public class PanelControl extends JPanel implements ActionListener
 			    poligonos.add(poligon);		
 			}
 		}
+		
+		System.out.println(poligonos.size());
 	}
 
 	

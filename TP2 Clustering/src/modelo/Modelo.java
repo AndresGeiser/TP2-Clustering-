@@ -77,10 +77,12 @@ public class Modelo
 	private void eliminarAristasMayores(int n) //'n' cantidad de aristas a borrar
 	{
 		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
-		Arista aristaMaxima = aristasAuxiliar.get(0);
+		Arista aristaMaxima;
 		
 		for(int i=0; i < n; i++) 
 		{
+			aristaMaxima = aristasAuxiliar.get(0);
+			
 			for(Arista arista : aristasAuxiliar)
 				if(arista.getPeso() > aristaMaxima.getPeso())
 					aristaMaxima = arista;
@@ -88,8 +90,6 @@ public class Modelo
 			grafo.borrarArista(aristaMaxima.getVertice1(), aristaMaxima.getVertice2());
 			aristasAuxiliar.remove(aristaMaxima);
 			
-			if(aristasAuxiliar.size() > 0)
-				aristaMaxima = aristasAuxiliar.get(0);
 		}
 	}
 	
