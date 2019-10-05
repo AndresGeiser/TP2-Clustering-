@@ -2,6 +2,7 @@ package controlador;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -22,6 +23,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import modelo.Modelo;
+import vista.PanelDeControles;
 import vista.Vista;
 
 public class PanelControl extends JPanel implements ActionListener
@@ -35,7 +37,7 @@ public class PanelControl extends JPanel implements ActionListener
 	private JButton btnCentrar, btnEliminar, btnClustering;
 	
 	private ArrayList<MapMarkerDot> puntos;
-	private ArrayList<MapPolygonImpl> poligonos;
+	private ArrayList<MapPolygonImpl> aristas;
 	
 	private Color colorGrafo;
 	
@@ -44,12 +46,8 @@ public class PanelControl extends JPanel implements ActionListener
 		this.modelo = modelo;
 		this.vista = vista;
 		
-		//Colocamos los puntos en el mapa
 		puntos = new ArrayList<MapMarkerDot>();
-		for(Coordinate coord : modelo.getCoordenadas())
-			puntos.add(new MapMarkerDot(coord));
-		
-		poligonos = new ArrayList<MapPolygonImpl>();
+		aristas = new ArrayList<MapPolygonImpl>();
 		
 		int r = (int)(Math.random()*256);
 		int g = (int)(Math.random()*256);
@@ -108,13 +106,18 @@ public class PanelControl extends JPanel implements ActionListener
 		{
 			@Override
 			public void keyTyped(KeyEvent arg0) 
-			{
+			{			
 				if(txtCantClusters.getText().length() == 3)
+				{
+					Toolkit.getDefaultToolkit().beep();
 					arg0.consume();
+				}
 				
 				if(!Character.isDigit(arg0.getKeyChar()))
 					arg0.consume();
+
 			}
+			
 		});
 		txtCantClusters.setBounds(222, 7, 30, 23);
 		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()));
@@ -188,16 +191,16 @@ public class PanelControl extends JPanel implements ActionListener
 			{
 				modelo.clustering(Integer.parseInt(txtCantClusters.getText()));
 				
-				for(MapPolygonImpl poligono : poligonos)
+				for(MapPolygonImpl poligono : aristas)
 					vista.mapa.removeMapPolygon(poligono);
-				poligonos.clear();
+				aristas.clear();
 				
 				dibujarAristas();
 			}
 		}
 	}
 	
-	//Metodo que desactiva o activa la visibilidad del grafo del mapa
+	//Metodo que desactiva o activa la visibilidad del grafo en el mapa
 	private void activarODesactivar() 
 	{
 		if(boxVisibilidad.isSelected() == true)
@@ -205,8 +208,8 @@ public class PanelControl extends JPanel implements ActionListener
 			for(int i=0; i < puntos.size(); i++)
 				puntos.get(i).setVisible(true);
 			
-			for(int i=0; i < poligonos.size(); i++)
-				poligonos.get(i).setVisible(true);
+			for(int i=0; i < aristas.size(); i++)
+				aristas.get(i).setVisible(true);
 			
 			boxVisibilidad.setToolTipText("Ocultar");
 		}
@@ -215,8 +218,8 @@ public class PanelControl extends JPanel implements ActionListener
 			for(int i=0; i < puntos.size(); i++)
 				puntos.get(i).setVisible(false);
 			
-			for(int i=0; i < poligonos.size(); i++)
-				poligonos.get(i).setVisible(false);
+			for(int i=0; i < aristas.size(); i++)
+				aristas.get(i).setVisible(false);
 			
 			boxVisibilidad.setToolTipText("Aparecer");
 		}
@@ -230,12 +233,18 @@ public class PanelControl extends JPanel implements ActionListener
 		for(int i=0; i < puntos.size(); i++) 
 			vista.mapa.removeMapMarker(puntos.get(i));
 
-		for(int i=0; i < poligonos.size(); i++)
-			vista.mapa.removeMapPolygon(poligonos.get(i));
+		for(int i=0; i < aristas.size(); i++)
+			vista.mapa.removeMapPolygon(aristas.get(i));
 
 		vista.panelDeControles.eliminar(this);
 		vista.mapa.updateUI();
 		vista.panelDeControles.updateUI();
+		
+		if(vista.panelDeControles.getComponents().length == 0)
+		{
+			vista.btnExportar.setBackground(vista.bordo);
+			vista.btnExportar.setEnabled(false);
+		}
 	}
 	
 	//Metodo que posiciona la ubicacion del mapa en un punto del grafo
@@ -246,9 +255,12 @@ public class PanelControl extends JPanel implements ActionListener
 	
 	private void dibujarPuntos() 
 	{
-		for(MapMarkerDot punto : puntos) 
+		MapMarkerDot punto;
+		for(Coordinate coordenada : modelo.getCoordenadas()) 
 		{
+			punto = new MapMarkerDot(coordenada);
 			punto.setBackColor(colorGrafo);
+			puntos.add(punto);
 			vista.mapa.addMapMarker(punto);
 		}
 	}
@@ -269,14 +281,22 @@ public class PanelControl extends JPanel implements ActionListener
 				destino = modelo.getCoordenadas().get(j);
 				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
 				poligon = new MapPolygonImpl(route);
-				poligon.setColor(colorGrafo);
+				poligon.setColor(colorGrafo.darker());
 			    vista.mapa.addMapPolygon(poligon);                     
-			    poligonos.add(poligon);		
+			    aristas.add(poligon);		
 			}
 		}
 		
-		System.out.println(poligonos.size());
 	}
-
+	
+	public String getNombre() 
+	{
+		return lblNombre.getText();
+	}
+	
+	public ArrayList<Coordinate> getCoordenadas()
+	{
+		return modelo.getCoordenadas();
+	}
 	
 }

@@ -30,7 +30,6 @@ public class Controlador implements ActionListener
 	{
 		this.modelo = modelo;
 		this.vista = vista;
-		
 		marcasTemporales = new ArrayList<>();
 	
 		this.vista.btnImportar.addActionListener(this);
@@ -100,11 +99,14 @@ public class Controlador implements ActionListener
 	{
 		if(e.getSource() == vista.btnImportar )
 			importar();
-			
+		
+		if(e.getSource() == vista.btnExportar)
+			exportar();
+		
 		if(e.getSource() == vista.btnNuevo) 
 		{
 			vista.btnNuevo.setEnabled(false);
-			vista.btnNuevo.setBackground(vista.gris3);
+			vista.btnNuevo.setBackground(vista.bordo);
 			vista.btnImportar.setEnabled(false);
 			vista.btnImportar.setBackground(vista.bordo);
 			vista.btnExportar.setEnabled(false);
@@ -128,28 +130,15 @@ public class Controlador implements ActionListener
 			vista.btnGuardar.setEnabled(false);
 			vista.btnGuardar.setBackground(vista.bordo);
 			
-			while(marcasTemporales.size() > 0) 
-			{
-				vista.mapa.removeMapMarker(marcasTemporales.get(0));
-				marcasTemporales.remove(0);
-			}
+			limpiarMarcasTemporales();
 		}
 		
 		if(e.getSource() == vista.btnGuardar) 
 		{
-			for(int i=0; i < marcasTemporales.size(); i++) 
-			{
-				vista.mapa.removeMapMarker(marcasTemporales.get(i));
-				modelo.agregarCoordenada(marcasTemporales.get(i).getCoordinate());
-			}
-			marcasTemporales.clear();
-				
 			vista.btnNuevo.setEnabled(true);
 			vista.btnNuevo.setBackground(vista.rojo1);
 			vista.btnImportar.setEnabled(true);
 			vista.btnImportar.setBackground(vista.rojo1);
-			vista.btnExportar.setEnabled(true);
-			vista.btnExportar.setBackground(vista.rojo1);
 			vista.btnCancelar.setEnabled(false);
 			vista.btnCancelar.setBackground(vista.bordo);
 			vista.btnGuardar.setEnabled(false);
@@ -157,18 +146,21 @@ public class Controlador implements ActionListener
 			vista.btnDeshacer.setEnabled(false);
 			vista.btnDeshacer.setBackground(vista.bordo);
 			
+			for(MapMarkerDot marca : marcasTemporales)
+				modelo.agregarCoordenada(marca.getCoordinate());
+			
+			limpiarMarcasTemporales();
+			
 			colocarPanelControl();
 		}
 		
 		if(e.getSource() == vista.btnDeshacer) 
 		{
-			if(marcasTemporales.size() > 0) 
+			if(hayMarcas()) 
 			{
-				int i = marcasTemporales.size() - 1;
-				vista.mapa.removeMapMarker(marcasTemporales.get(i));
-				marcasTemporales.remove(i);
+				borrarUltimaMarca();
 				
-				if(marcasTemporales.size() == 0) 
+				if(!hayMarcas()) 
 				{
 					vista.btnGuardar.setEnabled(false);
 					vista.btnGuardar.setBackground(vista.bordo);
@@ -177,6 +169,8 @@ public class Controlador implements ActionListener
 				}
 			}
 		}
+		
+		
 	}
 	
 	private void importar() 
@@ -191,9 +185,8 @@ public class Controlador implements ActionListener
 	private void buscarArchivo() throws IOException 
 	{
 		JFileChooser jf = new JFileChooser();
-		jf.showOpenDialog(vista);
 		
-		if(jf.getSelectedFile() != null) 
+		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		{
 			leerArchivo(jf.getSelectedFile());
 			colocarPanelControl();
@@ -239,21 +232,42 @@ public class Controlador implements ActionListener
 		bf.close();
 	}
 	
+	private void exportar() 
+	{
+		Exportar ventana = new Exportar(vista, true);
+		ventana.setVisible(true);
+	}
+	
 	private void colocarPanelControl() 
 	{
 		modelo.armarGrafo();
 		
 		String nombre = JOptionPane.showInputDialog("Nombre: ");
-		
 		if(nombre.equals(""))
 			nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
 		
 		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
 		vista.panelDeControles.updateUI();
 		
+		vista.btnExportar.setBackground(vista.rojo1);
+		vista.btnExportar.setEnabled(true);
+		
 		modelo = new Modelo();
 	}
 	
+	private void limpiarMarcasTemporales() 
+	{
+		for(MapMarkerDot marca : marcasTemporales)
+			vista.mapa.removeMapMarker(marca);
+		marcasTemporales.clear();
+	}
+	
+	private void borrarUltimaMarca() 
+	{
+		int i = marcasTemporales.size() - 1;
+		vista.mapa.removeMapMarker(marcasTemporales.get(i));
+		marcasTemporales.remove(i);
+	}
 	
 	//METODOS AUXILIARES
 	private boolean estaMarcada(MapMarkerDot coordenada) 
@@ -261,6 +275,13 @@ public class Controlador implements ActionListener
 		for(MapMarkerDot marca : marcasTemporales)
 			if(coordenada.getCoordinate().equals(marca.getCoordinate()))
 				return true;
+		return false;
+	}
+	
+	private boolean hayMarcas() 
+	{
+		if(marcasTemporales.size() > 0) 
+			return true;
 		return false;
 	}
 }

@@ -18,7 +18,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.BoxLayout;
 
 
-public class Vista extends JFrame  
+public class Vista extends JFrame 
 {
 	public JButton btnNuevo, btnGuardar, btnDeshacer, btnCancelar, btnImportar, btnExportar;
 	public JPanel panelMapa;
@@ -29,6 +29,7 @@ public class Vista extends JFrame
 	
 	public Vista() 
 	{
+		setResizable(false);
 		this.getContentPane().setBackground(gris2);
 		this.setBounds(100, 100, 977, 680);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -91,9 +92,10 @@ public class Vista extends JFrame
 		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/exportar24.png")));
 		btnExportar.setBounds(798, 11, 150, 28);
-		btnExportar.setBackground(rojo1);
+		btnExportar.setBackground(bordo);
 		btnExportar.setForeground(Color.WHITE);
 		btnExportar.setFocusable(false);
+		btnExportar.setEnabled(false);
 		getContentPane().add(btnExportar);		
 		
 		btnNuevo = new JButton("Nuevo");
