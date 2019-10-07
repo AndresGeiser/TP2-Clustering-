@@ -25,25 +25,28 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 
-public class Exportar extends JDialog implements ActionListener
+public class VentanaExportar extends JDialog implements ActionListener
 {
 	private Vista vista;
-	
-	private JLabel lblNewLabel;
+
+	private JLabel lblMensaje;
 	private JButton btnCancelar;
 	private JButton btnExportar;
 	private JScrollPane scrollPane;
-	private JPanel panel;
+	private JPanel panelDeOpciones;
 	
 	private ArrayList<JCheckBox> opciones;
 	
-	public Exportar(Vista vista, boolean b) 
+	public VentanaExportar(Vista vista, boolean b) 
 	{
 		super(vista, b);
 		
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaExportar.class.getResource("/iconos/iconVentanaExportar.png")));	
 		this.setResizable(false);
+		this.setTitle("Exportar");
 		this.getContentPane().setFont(new Font("Tahoma", Font.PLAIN, 11));
 		this.setBounds(100, 100, 500, 210);
 		this.setLocationRelativeTo(null);
@@ -54,31 +57,31 @@ public class Exportar extends JDialog implements ActionListener
 		opciones = new ArrayList<JCheckBox>();
 		
 		iniComponentes();
-		llenarPanel();
+		colocarOpciones();
 	}
 
 	private void iniComponentes() 
 	{
-		lblNewLabel = new JLabel("Seleccione las coordenadas que quieres exportar:");
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 13));
-		lblNewLabel.setForeground(Color.BLACK);
-		lblNewLabel.setBounds(10, 11, 464, 14);
-		getContentPane().add(lblNewLabel);
+		lblMensaje = new JLabel("Seleccione las coordenadas que quieres exportar:");
+		lblMensaje.setFont(new Font("Arial", Font.PLAIN, 13));
+		lblMensaje.setForeground(Color.BLACK);
+		lblMensaje.setBounds(10, 11, 464, 14);
+		getContentPane().add(lblMensaje);
 	
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 36, 464, 80);
 		scrollPane.setBorder(null);
 		getContentPane().add(scrollPane);
 		
-		panel = new JPanel();
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		scrollPane.setViewportView(panel);
+		panelDeOpciones = new JPanel();
+		panelDeOpciones.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		scrollPane.setViewportView(panelDeOpciones);
 		
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBorderPainted(false);
 		btnCancelar.setBorder(null);
 		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnCancelar.setBackground(vista.rojo1);
+		btnCancelar.setBackground(vista.rojo);
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setFocusable(false);
 		btnCancelar.setBounds(10, 127, 126, 31);
@@ -88,7 +91,7 @@ public class Exportar extends JDialog implements ActionListener
 		btnExportar.setBorderPainted(false);
 		btnExportar.setBorder(null);
 		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnExportar.setBackground(vista.rojo1);
+		btnExportar.setBackground(vista.rojo);
 		btnExportar.setForeground(Color.WHITE);
 		btnExportar.setFocusable(false);
 		btnExportar.setBounds(348, 127, 126, 31);
@@ -101,18 +104,17 @@ public class Exportar extends JDialog implements ActionListener
 			{
 				JButton boton = (JButton) e.getSource();
 				
-				if(boton.isEnabled()) 
-					boton.setBackground(vista.rojo2);
-				
+				boton.setBackground(vista.rojo.brighter());
+				boton.setFont(new Font("Arial", Font.PLAIN, 11));	
 			}
 		
 			@Override
 			public void mouseExited(MouseEvent e) 
 			{
 				JButton boton = (JButton) e.getSource();
-				if(boton.isEnabled()) 
-					boton.setBackground(vista.rojo1);
-			
+				
+				boton.setBackground(vista.rojo);
+				boton.setFont(new Font("Arial", Font.PLAIN, 13));
 			}
 		};
 		btnExportar.addMouseListener(efectoHover);
@@ -123,25 +125,24 @@ public class Exportar extends JDialog implements ActionListener
 		
 	}
 	
-	private void llenarPanel() 
+	//Metodo que obtiene el nombre de cada conjunto de coordenadas y las pone como opciones a exportar
+	private void colocarOpciones() 
 	{
-		Component[] componentes = vista.panelDeControles.getComponents(); //Obtenemos los paneles para obtener sus nombres y llenar el panel
+		Component[] componentes = vista.panelDeControles.getComponents(); 
 		
-		if(componentes.length > 0) 
+		JCheckBox checkBox;
+		PanelControl panelControl;
+		for(Component componente : componentes) 
 		{
-			JCheckBox checkBox;
-			PanelControl panelControl;
-			for(Component componente : componentes) 
-			{
-				panelControl = (PanelControl) componente;
-				
-				checkBox = new JCheckBox(panelControl.getNombre());
-				checkBox.setToolTipText(checkBox.getText());
-				checkBox.setPreferredSize(new Dimension(100,50));
-				panel.add(checkBox);
-				opciones.add(checkBox);
-			}	
-		} 	
+			panelControl = (PanelControl) componente;
+			
+			checkBox = new JCheckBox(panelControl.getNombre());
+			checkBox.setToolTipText(checkBox.getText());
+			checkBox.setPreferredSize(new Dimension(100,50));
+			
+			panelDeOpciones.add(checkBox);
+			opciones.add(checkBox);
+		}	 	
 	}
 
 	@Override
@@ -151,13 +152,27 @@ public class Exportar extends JDialog implements ActionListener
 		{	
 			if(selecionoAlguno())
 			{
-				exportar();				
-				this.dispose();				
+				JFileChooser guardar = new JFileChooser();
+				guardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				
+				if(guardar.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+				{	
+					File directorio = guardar.getSelectedFile();
+					
+					if(existe(directorio)) 
+					{
+						crearArchivos(elegidos(), directorio);
+						JOptionPane.showMessageDialog(null, "Las coordenadas se han exportado exitosamente.", "Completado", JOptionPane.INFORMATION_MESSAGE);			
+						this.dispose();
+					}
+					else
+						JOptionPane.showMessageDialog(null, "El directorio no existe.", "Atencion", JOptionPane.WARNING_MESSAGE);
+				}
+		
 			}
-			else
-			{	
-				JOptionPane.showMessageDialog(null, "Selecione alguno !!", "Error", JOptionPane.WARNING_MESSAGE);
-			}
+			else	
+				JOptionPane.showMessageDialog(null, "Selecione alguno !!", "Atencion", JOptionPane.WARNING_MESSAGE);
+			
 		}
 		
 		if(ae.getSource() == btnCancelar)
@@ -165,48 +180,37 @@ public class Exportar extends JDialog implements ActionListener
 		
 	}
 	
-	private void exportar()
+	private void crearArchivos(ArrayList<PanelControl> paneles, File ruta) 
 	{
-		JFileChooser guardar = new JFileChooser();
-		guardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		
-		if(guardar.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-		{
-			File ruta = guardar.getSelectedFile();
+		try 
+		{	
+			File archivo;
+			FileWriter fw;
+			BufferedWriter bw;
 			
-			try{
-				crearArchivos(elegidos(), ruta);
-			}catch(IOException ioe){ }
-		}
-	}
-	
-	private void crearArchivos(ArrayList<PanelControl> paneles, File ruta) throws IOException 
-	{
-		File archivo;
-		FileWriter fw;
-		BufferedWriter bw;
-		
-		for(PanelControl panel : paneles) 
-		{
-			archivo = new File(ruta + "\\" + panel.getNombre() + ".txt");
-			
-			if(!archivo.exists()) 
+			for(PanelControl panel : paneles) 
 			{
-				archivo.createNewFile();
-			}
-			
-			fw = new FileWriter(archivo);
-			bw = new BufferedWriter(fw);
-			
-			for(Coordinate coordenada : panel.getCoordenadas()) 
-			{
-				bw.write(coordenada.getLat() + " " + coordenada.getLon());
+				archivo = new File(ruta + "\\" + panel.getNombre() + ".txt");
+				
+				if(!archivo.exists())
+					archivo.createNewFile();
+				
+				fw = new FileWriter(archivo);
+				bw = new BufferedWriter(fw);
+				
+				for(Coordinate coordenada : panel.getCoordenadas()) 
+				{
+					bw.write(coordenada.getLat() + " " + coordenada.getLon());
+					bw.newLine();
+				}
+				
 				bw.newLine();
+				bw.close();
+			
 			}
-			
-			bw.newLine();
-			bw.close();
-			
+		}
+		catch(IOException ioe)
+		{
 		}
 	}
 	
@@ -222,12 +226,10 @@ public class Exportar extends JDialog implements ActionListener
 				panelControl = (PanelControl) componente;
 				
 				if(seleccionado.getText().equals(panelControl.getNombre()))
-				{
 					paneles.add(panelControl);
-				}
+				
 			}
 		}
-
 		return paneles;
 	}
 	
@@ -248,5 +250,14 @@ public class Exportar extends JDialog implements ActionListener
 			if(opcion.isSelected())
 				return true;
 		return false;
+	}
+	
+	private boolean existe(File directorio) 
+	{
+		File archivo = new File(String.valueOf(directorio));
+		
+		if(archivo.exists())
+			return true;
+		return false;	
 	}
 }

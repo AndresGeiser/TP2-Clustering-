@@ -23,7 +23,6 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import modelo.Modelo;
-import vista.PanelDeControles;
 import vista.Vista;
 
 public class PanelControl extends JPanel implements ActionListener
@@ -55,7 +54,7 @@ public class PanelControl extends JPanel implements ActionListener
 		colorGrafo = new Color(r, g, b);
 	
 		this.setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
-		this.setBackground(this.vista.gris3);
+		this.setBackground(this.vista.gris2);
 		this.setLayout(null);
 		
 		iniComponentes(nombre);
@@ -115,9 +114,7 @@ public class PanelControl extends JPanel implements ActionListener
 				
 				if(!Character.isDigit(arg0.getKeyChar()))
 					arg0.consume();
-
-			}
-			
+			}	
 		});
 		txtCantClusters.setBounds(222, 7, 30, 23);
 		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()));
@@ -139,7 +136,7 @@ public class PanelControl extends JPanel implements ActionListener
 			{
 				JButton boton = (JButton) e.getSource();
 			
-				boton.setBackground(new Color(102, 94, 94));
+				boton.setBackground(vista.gris2.brighter());
 			}
 		
 			@Override
@@ -191,7 +188,7 @@ public class PanelControl extends JPanel implements ActionListener
 			{
 				modelo.clustering(Integer.parseInt(txtCantClusters.getText()));
 				
-				for(MapPolygonImpl poligono : aristas)
+				for(MapPolygonImpl poligono : aristas) 
 					vista.mapa.removeMapPolygon(poligono);
 				aristas.clear();
 				
@@ -205,21 +202,21 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		if(boxVisibilidad.isSelected() == true)
 		{
-			for(int i=0; i < puntos.size(); i++)
-				puntos.get(i).setVisible(true);
+			for(MapMarkerDot punto : puntos)
+				punto.setVisible(true);
 			
-			for(int i=0; i < aristas.size(); i++)
-				aristas.get(i).setVisible(true);
+			for(MapPolygonImpl arista : aristas)
+				arista.setVisible(true);
 			
 			boxVisibilidad.setToolTipText("Ocultar");
 		}
 		else 
 		{
-			for(int i=0; i < puntos.size(); i++)
-				puntos.get(i).setVisible(false);
+			for(MapMarkerDot punto : puntos)
+				punto.setVisible(false);
 			
-			for(int i=0; i < aristas.size(); i++)
-				aristas.get(i).setVisible(false);
+			for(MapPolygonImpl arista : aristas)
+				arista.setVisible(false);
 			
 			boxVisibilidad.setToolTipText("Aparecer");
 		}
@@ -230,16 +227,17 @@ public class PanelControl extends JPanel implements ActionListener
 	//Metodo que elimina el grafo 
 	private void eliminar() 
 	{
-		for(int i=0; i < puntos.size(); i++) 
-			vista.mapa.removeMapMarker(puntos.get(i));
-
-		for(int i=0; i < aristas.size(); i++)
-			vista.mapa.removeMapPolygon(aristas.get(i));
+		for(MapMarkerDot punto : puntos)
+			vista.mapa.removeMapMarker(punto);
+		
+		for(MapPolygonImpl arista : aristas) 
+			vista.mapa.removeMapPolygon(arista);
 
 		vista.panelDeControles.eliminar(this);
 		vista.mapa.updateUI();
 		vista.panelDeControles.updateUI();
 		
+		//Desactivamos el boton exportar en caso de eliminar todos los grafos
 		if(vista.panelDeControles.getComponents().length == 0)
 		{
 			vista.btnExportar.setBackground(vista.bordo);
@@ -260,8 +258,8 @@ public class PanelControl extends JPanel implements ActionListener
 		{
 			punto = new MapMarkerDot(coordenada);
 			punto.setBackColor(colorGrafo);
-			puntos.add(punto);
 			vista.mapa.addMapMarker(punto);
+			puntos.add(punto);
 		}
 	}
 	
@@ -269,8 +267,7 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		Coordinate origen;
 		Coordinate destino;
-		ArrayList<Coordinate> route;
-		MapPolygonImpl poligon;
+		MapPolygonImpl poligono;
 
 		for(int i=0; i < modelo.getCoordenadas().size(); i++) 
 		{
@@ -279,11 +276,10 @@ public class PanelControl extends JPanel implements ActionListener
 			for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
 			{						
 				destino = modelo.getCoordenadas().get(j);
-				route = new ArrayList<Coordinate>(Arrays.asList(origen, destino, destino)); //El poligono requiere  tres coordenadas
-				poligon = new MapPolygonImpl(route);
-				poligon.setColor(colorGrafo.darker());
-			    vista.mapa.addMapPolygon(poligon);                     
-			    aristas.add(poligon);		
+				poligono = new MapPolygonImpl(Arrays.asList(origen, destino, destino));//El poligono necesita 3 puntos para dibujarse
+				poligono.setColor(colorGrafo.darker());
+			    vista.mapa.addMapPolygon(poligono);                     
+			    aristas.add(poligono);		
 			}
 		}
 		

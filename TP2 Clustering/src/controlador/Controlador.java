@@ -1,6 +1,5 @@
 package controlador;
 
-
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,9 +64,9 @@ public class Controlador implements ActionListener
 						{
 							//Activamos boton guardar y deshacer
 							vista.btnGuardar.setEnabled(true);
-							vista.btnGuardar.setBackground(vista.rojo1);
+							vista.btnGuardar.setBackground(vista.rojo);
 							vista.btnDeshacer.setEnabled(true);
-							vista.btnDeshacer.setBackground(vista.rojo1);
+							vista.btnDeshacer.setBackground(vista.rojo);
 						}
 					}
 				}	
@@ -98,7 +97,7 @@ public class Controlador implements ActionListener
 	public void actionPerformed(ActionEvent e) 
 	{
 		if(e.getSource() == vista.btnImportar )
-			importar();
+			buscarArchivo();;
 		
 		if(e.getSource() == vista.btnExportar)
 			exportar();
@@ -112,17 +111,15 @@ public class Controlador implements ActionListener
 			vista.btnExportar.setEnabled(false);
 			vista.btnExportar.setBackground(vista.bordo);
 			vista.btnCancelar.setEnabled(true);
-			vista.btnCancelar.setBackground(vista.rojo1);
+			vista.btnCancelar.setBackground(vista.rojo);
 		}
 		
 		if(e.getSource() == vista.btnCancelar) 
 		{
 			vista.btnNuevo.setEnabled(true);
-			vista.btnNuevo.setBackground(vista.rojo1);
+			vista.btnNuevo.setBackground(vista.rojo);
 			vista.btnImportar.setEnabled(true);
-			vista.btnImportar.setBackground(vista.rojo1);
-			vista.btnExportar.setEnabled(true);
-			vista.btnExportar.setBackground(vista.rojo1);
+			vista.btnImportar.setBackground(vista.rojo);
 			vista.btnCancelar.setEnabled(false);
 			vista.btnCancelar.setBackground(vista.bordo);
 			vista.btnDeshacer.setEnabled(false);
@@ -130,132 +127,137 @@ public class Controlador implements ActionListener
 			vista.btnGuardar.setEnabled(false);
 			vista.btnGuardar.setBackground(vista.bordo);
 			
-			limpiarMarcasTemporales();
+			if(vista.panelDeControles.getComponents().length > 0)
+			{
+				vista.btnExportar.setEnabled(true);
+				vista.btnExportar.setBackground(vista.rojo);
+			}
+			
+			borrarMarcasTemporales();
 		}
 		
 		if(e.getSource() == vista.btnGuardar) 
 		{
-			vista.btnNuevo.setEnabled(true);
-			vista.btnNuevo.setBackground(vista.rojo1);
-			vista.btnImportar.setEnabled(true);
-			vista.btnImportar.setBackground(vista.rojo1);
-			vista.btnCancelar.setEnabled(false);
-			vista.btnCancelar.setBackground(vista.bordo);
-			vista.btnGuardar.setEnabled(false);
-			vista.btnGuardar.setBackground(vista.bordo);
-			vista.btnDeshacer.setEnabled(false);
-			vista.btnDeshacer.setBackground(vista.bordo);
+			String nombre = JOptionPane.showInputDialog("Nombre: ");
+				
+			if(nombre != null) //Chequeamos si acepto
+			{
+				vista.btnNuevo.setEnabled(true);
+				vista.btnNuevo.setBackground(vista.rojo);
+				vista.btnImportar.setEnabled(true);
+				vista.btnImportar.setBackground(vista.rojo);
+				vista.btnCancelar.setEnabled(false);
+				vista.btnCancelar.setBackground(vista.bordo);
+				vista.btnGuardar.setEnabled(false);
+				vista.btnGuardar.setBackground(vista.bordo);
+				vista.btnDeshacer.setEnabled(false);
+				vista.btnDeshacer.setBackground(vista.bordo);
+				
+				for(MapMarkerDot marca : marcasTemporales)
+					modelo.agregarCoordenada(marca.getCoordinate());
 			
-			for(MapMarkerDot marca : marcasTemporales)
-				modelo.agregarCoordenada(marca.getCoordinate());
-			
-			limpiarMarcasTemporales();
-			
-			colocarPanelControl();
+				borrarMarcasTemporales();
+				
+				if(nombre.equals(""))
+					nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
+				
+				colocarPanelControl(nombre);
+			}
 		}
 		
 		if(e.getSource() == vista.btnDeshacer) 
 		{
-			if(hayMarcas()) 
-			{
-				borrarUltimaMarca();
+			borrarUltimaMarca();
 				
-				if(!hayMarcas()) 
-				{
-					vista.btnGuardar.setEnabled(false);
-					vista.btnGuardar.setBackground(vista.bordo);
-					vista.btnDeshacer.setEnabled(false);
-					vista.btnDeshacer.setBackground(vista.bordo);
-				}
-			}
-		}
-		
-		
+			if(!hayMarcas())
+			{
+				vista.btnGuardar.setEnabled(false);
+				vista.btnGuardar.setBackground(vista.bordo);
+				vista.btnDeshacer.setEnabled(false);
+				vista.btnDeshacer.setBackground(vista.bordo);
+			}	
+		}	
 	}
 	
-	private void importar() 
-	{
-		try{
-			buscarArchivo();
-		}catch (IOException e1){
-			e1.printStackTrace();
-		}
-	}
-	
-	private void buscarArchivo() throws IOException 
+	private void buscarArchivo() 
 	{
 		JFileChooser jf = new JFileChooser();
 		
 		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
-		{
-			leerArchivo(jf.getSelectedFile());
-			colocarPanelControl();
+		{	
+			leerArchivo(jf.getSelectedFile());	
+			
+			String nombreArchivo = jf.getSelectedFile().getName();
+			String nombre = nombreArchivo.substring(0, nombreArchivo.length() - 4); 
+	
+			colocarPanelControl(nombre);	
 		}
 	}
 	
-	private void leerArchivo(File file) throws IOException
+	private void leerArchivo(File file)
 	{	
-		String latitud;
-		String longitud;
-		
-		BufferedReader bf = new BufferedReader(new FileReader(file));
-		
-		String linea;
-		
-		boolean llegoAlEspacio;
-	
-		while(!(linea=bf.readLine()).equals(""))
+		try 
 		{
-			llegoAlEspacio = false;
-			latitud = "";
-			longitud = "";
+			String latitud;
+			String longitud;	
+			String linea;
+			boolean llegoAlEspacio;
 			
-			for(int i=0; i < linea.length(); i++) 
+			BufferedReader bf = new BufferedReader(new FileReader(file));
+		
+			while(!(linea=bf.readLine()).equals(""))
 			{
-				if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
-					i++;
+				llegoAlEspacio = false;
+				latitud = "";
+				longitud = "";
 				
-				if(llegoAlEspacio == false) 
+				for(int i=0; i < linea.length(); i++) 
 				{
-					if(linea.charAt(i) != ' ')
-						latitud += linea.charAt(i);
+					if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
+						i++;
+					
+					if(llegoAlEspacio == false) 
+					{
+						if(linea.charAt(i) != ' ')
+							latitud += linea.charAt(i);
+						else
+							llegoAlEspacio = true;
+					}
 					else
-						llegoAlEspacio = true;
+						longitud += linea.charAt(i);
 				}
-				else
-					longitud += linea.charAt(i);
+				
+				modelo.agregarCoordenada(new Coordinate(Double.parseDouble(latitud), Double.parseDouble(longitud)));
 			}
 			
-			modelo.agregarCoordenada(new Coordinate(Double.parseDouble(latitud), Double.parseDouble(longitud)));
+			bf.close();
 		}
-		
-		bf.close();
+		catch (IOException e1)
+		{
+			e1.printStackTrace();
+		}
 	}
 	
 	private void exportar() 
 	{
-		Exportar ventana = new Exportar(vista, true);
+		VentanaExportar ventana = new VentanaExportar(vista, true);
 		ventana.setVisible(true);
 	}
 	
-	private void colocarPanelControl() 
+	private void colocarPanelControl(String nombre) 
 	{
 		modelo.armarGrafo();
-		
-		String nombre = JOptionPane.showInputDialog("Nombre: ");
-		if(nombre.equals(""))
-			nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
 		
 		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
 		vista.panelDeControles.updateUI();
 		
-		vista.btnExportar.setBackground(vista.rojo1);
+		vista.btnExportar.setBackground(vista.rojo);
 		vista.btnExportar.setEnabled(true);
 		
 		modelo = new Modelo();
 	}
 	
-	private void limpiarMarcasTemporales() 
+	private void borrarMarcasTemporales() 
 	{
 		for(MapMarkerDot marca : marcasTemporales)
 			vista.mapa.removeMapMarker(marca);
@@ -264,9 +266,12 @@ public class Controlador implements ActionListener
 	
 	private void borrarUltimaMarca() 
 	{
-		int i = marcasTemporales.size() - 1;
-		vista.mapa.removeMapMarker(marcasTemporales.get(i));
-		marcasTemporales.remove(i);
+		if(hayMarcas()) 
+		{
+			int i = marcasTemporales.size() - 1;
+			vista.mapa.removeMapMarker(marcasTemporales.get(i));
+			marcasTemporales.remove(i);			
+		}
 	}
 	
 	//METODOS AUXILIARES

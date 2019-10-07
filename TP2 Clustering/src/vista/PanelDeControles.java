@@ -18,6 +18,7 @@ public class PanelDeControles extends JPanel
 	{
 		panelControl.setBounds(0, y, this.getWidth(), 37);
 		this.add(panelControl);
+		
 		y += panelControl.getHeight();
 		
 		if(this.getComponents().length > 10)
