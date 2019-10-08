@@ -52,6 +52,21 @@ public class TestAGM
 		assertFalse(grafo.existeArista(0, 2));
 	}
 	
+	@Test //Prueba que se elimine la segunda arista de mayor longitud
+	public void testTodasMismaArista()
+	{
+		Grafo grafo = new Grafo(3);
+		
+		grafo.agregarArista(0, 1, 10);
+		grafo.agregarArista(1, 2, 10);
+		grafo.agregarArista(0, 2, 10);
+		
+		AGM grafoAGM = new AGM(grafo);
+		grafo = grafoAGM.getGrafoAGM();
+
+		assertFalse(grafo.existeArista(1, 2));
+	}
+	
 	@Test (expected = IllegalArgumentException.class)
 	public void testAGMVacio()
 	{
