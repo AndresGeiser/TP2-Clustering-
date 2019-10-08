@@ -2,6 +2,8 @@ package controlador;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+
 import vista.Vista;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +20,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -166,7 +171,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 						this.dispose();
 					}
 					else
-						JOptionPane.showMessageDialog(null, "El directorio no existe.", "Atencion", JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "El directorio " + directorio + " no existe.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 		
 			}

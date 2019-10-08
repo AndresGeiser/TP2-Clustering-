@@ -3,17 +3,21 @@ package vista;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.UIManager;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import java.awt.event.MouseAdapter;
 import javax.swing.border.LineBorder;
-import java.awt.Toolkit;
 
 public class Vista extends JFrame 
 {
@@ -23,11 +27,11 @@ public class Vista extends JFrame
 	private JScrollPane scrollPane;
 	public PanelDeControles panelDeControles;
 	
-	public Color gris1, gris2, rojo, bordo;
+	public Color gris1, gris2, rojo;
 	
 	public Vista() 
 	{
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/iconos/iconPrincipal.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/iconos/iconPrincipal.png")));
 		this.setTitle("Clustering");
 		this.setResizable(false);
 		this.setBounds(100, 100, 977, 680);
@@ -38,9 +42,9 @@ public class Vista extends JFrame
 		gris1 = new Color(179, 182, 183);
 		gris2 = new Color(62, 54, 54);
 		rojo = new Color(201, 47, 47);
-		bordo = new Color(116, 16, 16);
-		
+
 		iniComponentes();	
+		
 	}
 
 	private void iniComponentes() 
@@ -72,71 +76,57 @@ public class Vista extends JFrame
 		
 		btnImportar = new JButton("Importar");
 		btnImportar.setBorder(null);
-		btnImportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnImportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/importar24.png")));
-		btnImportar.setBounds(640, 11, 150, 28);
+		btnImportar.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnImportar.setBounds(640, 11, 150, 35);
 		btnImportar.setBackground(rojo);
 		btnImportar.setForeground(Color.WHITE);
-		btnImportar.setFocusable(false);
 		this.getContentPane().add(btnImportar);
 		
 		btnExportar = new JButton("Exportar");
-		btnExportar.setBorderPainted(false);
 		btnExportar.setBorder(null);
-		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/exportar24.png")));
-		btnExportar.setBounds(798, 11, 150, 28);
-		btnExportar.setBackground(bordo);
-		btnExportar.setForeground(Color.WHITE);
-		btnExportar.setFocusable(false);
+		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnExportar.setBounds(798, 11, 150, 35);
+		btnExportar.setBackground(rojo);
+		btnExportar.setForeground(Color.gray);
 		btnExportar.setEnabled(false);
 		this.getContentPane().add(btnExportar);		
 		
 		btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBorderPainted(false);
 		btnNuevo.setBorder(null);
-		btnNuevo.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnNuevo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/puntero.png")));
-		btnNuevo.setBounds(640, 45, 150, 28);
+		btnNuevo.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnNuevo.setBounds(640, 45, 150, 35);
 		btnNuevo.setBackground(rojo);
 		btnNuevo.setForeground(Color.WHITE);
-		btnNuevo.setFocusable(false);
 		this.getContentPane().add(btnNuevo);
 		
-		btnGuardar = new JButton("");
-		btnGuardar.setBorderPainted(false);
+		btnGuardar = new JButton();
 		btnGuardar.setBorder(null);
-		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnGuardar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/guardar24.png")));
-		btnGuardar.setBounds(798, 45, 50, 28);
-		btnGuardar.setBackground(bordo);
+		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 13));
+		btnGuardar.setBounds(798, 45, 50, 35);
 		btnGuardar.setForeground(Color.WHITE);
-		btnGuardar.setFocusable(false);
 		btnGuardar.setEnabled(false);
 		this.getContentPane().add(btnGuardar);
 		
-		btnDeshacer = new JButton("");
+		btnDeshacer = new JButton();
+		btnDeshacer.setBorder(null);
 		btnDeshacer.setIcon(new ImageIcon(Vista.class.getResource("/iconos/deshacer24.png")));
 		btnDeshacer.setForeground(Color.WHITE);
 		btnDeshacer.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnDeshacer.setFocusable(false);
 		btnDeshacer.setEnabled(false);
-		btnDeshacer.setBorderPainted(false);
-		btnDeshacer.setBorder(null);
-		btnDeshacer.setBackground(bordo);
-		btnDeshacer.setBounds(848, 45, 50, 28);
+		btnDeshacer.setBounds(848, 45, 50, 35);
 		this.getContentPane().add(btnDeshacer);
 		
-		btnCancelar = new JButton("");
+		btnCancelar = new JButton();
+		btnCancelar.setBorder(null);
 		btnCancelar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/cruz24.png")));
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 13));
-		btnCancelar.setFocusable(false);
 		btnCancelar.setEnabled(false);
-		btnCancelar.setBorderPainted(false);
-		btnCancelar.setBorder(null);
-		btnCancelar.setBackground(bordo);
-		btnCancelar.setBounds(898, 45, 50, 28);
+		btnCancelar.setBounds(898, 45, 50, 35);
 		this.getContentPane().add(btnCancelar);
 		
 		
@@ -148,7 +138,7 @@ public class Vista extends JFrame
 				JButton boton = (JButton) e.getSource();
 				
 				if(boton.isEnabled()) 
-					boton.setBackground(rojo.brighter());
+					boton.setBackground(rojo.darker());
 				
 			}
 		
@@ -169,4 +159,5 @@ public class Vista extends JFrame
 		btnDeshacer.addMouseListener(efectoHover);
 		
 	}
+	
 }

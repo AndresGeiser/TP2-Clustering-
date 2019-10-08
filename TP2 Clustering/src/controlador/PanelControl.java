@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.MatteBorder;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
@@ -59,56 +60,50 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		iniComponentes(nombre);
 		dibujarPuntos();
-		dibujarAristas();
+		dibujarAristas();	
 	}
 
 	private void iniComponentes(String nombre) 
 	{	
-		this.lblNombre = new JLabel(nombre);
-		this.lblNombre.setToolTipText(nombre);
-		this.lblNombre.setBounds(28, 7, 100, 23);
-		this.lblNombre.setForeground(Color.white);
-		this.lblNombre.setFont(new Font("Lucida Sans", Font.BOLD, 13));
-		this.lblNombre.setBorder(null);
+		lblNombre = new JLabel(nombre);
+		lblNombre.setToolTipText(nombre);
+		lblNombre.setBounds(28, 7, 100, 23);
+		lblNombre.setForeground(Color.white);
+		lblNombre.setFont(new Font("Lucida Sans", Font.BOLD, 13));
+		lblNombre.setBorder(null);
 		this.add(this.lblNombre);
 		
 		boxVisibilidad = new JCheckBox();
 		boxVisibilidad.setBackground(null);
-		boxVisibilidad.setForeground(Color.WHITE);
 		boxVisibilidad.setBounds(6, 7, 21, 23);
-		boxVisibilidad.setToolTipText("Ocultar");
 		boxVisibilidad.setSelected(true);
-		boxVisibilidad.setFocusable(false);
+		boxVisibilidad.setToolTipText("Ocultar");
 		this.add(boxVisibilidad);
 	
 		btnCentrar = new JButton();
 		btnCentrar.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCentrar.png")));
 		btnCentrar.setToolTipText("Centrar");
 		btnCentrar.setBackground(null);
-		btnCentrar.setBounds(160, 7, 29, 23);
-		btnCentrar.setFocusable(false);
-		btnCentrar.setBorderPainted(false);
+		btnCentrar.setBounds(156, 7, 29, 23);
 		this.add(btnCentrar);
 		
 		btnEliminar = new JButton();
 		btnEliminar.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconCesto.png")));
 		btnEliminar.setToolTipText("Eliminar");
 		btnEliminar.setBackground(null);
-		btnEliminar.setBounds(191, 7, 29, 23);
-		btnEliminar.setFocusable(false);
-		btnEliminar.setBorderPainted(false);
+		btnEliminar.setBounds(187, 7, 29, 23);
 		this.add(btnEliminar);
 		
 		btnEstadisticas = new JButton();
 		btnEstadisticas.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/estadistica.png")));
-		btnEstadisticas.setBounds(125, 7, 29, 23);
 		btnEstadisticas.setToolTipText("Ver estadisticas");
 		btnEstadisticas.setBackground(null);
-		btnEstadisticas.setFocusable(false);
-		btnEstadisticas.setBorderPainted(false);
+		btnEstadisticas.setBounds(125, 7, 29, 23);
 		this.add(btnEstadisticas);
 		
 		txtCantClusters = new JTextField();
+		txtCantClusters.setBackground(vista.gris2.brighter());
+		txtCantClusters.setForeground(Color.WHITE);
 		txtCantClusters.setText("1");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
 		{
@@ -125,7 +120,7 @@ public class PanelControl extends JPanel implements ActionListener
 					arg0.consume();
 			}	
 		});
-		txtCantClusters.setBounds(222, 7, 30, 23);
+		txtCantClusters.setBounds(218, 7, 33, 23);
 		txtCantClusters.setToolTipText("Max: " + (modelo.getCoordenadas().size()));
 		this.add(txtCantClusters);
 		
@@ -134,8 +129,6 @@ public class PanelControl extends JPanel implements ActionListener
 		btnClustering.setToolTipText("Clustering");
 		btnClustering.setBackground(null);
 		btnClustering.setBounds(253, 7, 29, 23);
-		btnClustering.setFocusable(false);
-		btnClustering.setBorderPainted(false);
 		this.add(btnClustering);
 			
 		MouseAdapter efectoHover = new MouseAdapter()
@@ -160,13 +153,13 @@ public class PanelControl extends JPanel implements ActionListener
 		btnEliminar.addMouseListener(efectoHover);
 		btnClustering.addMouseListener(efectoHover);
 		btnEstadisticas.addMouseListener(efectoHover);
+		
 	
 		boxVisibilidad.addActionListener(this);
 		btnCentrar.addActionListener(this);
 		btnEliminar.addActionListener(this);
 		btnClustering.addActionListener(this);	
 		btnEstadisticas.addActionListener(this);
-		
 	}
 
 	@Override
@@ -186,6 +179,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		if(e.getSource() == btnEstadisticas)
 			verEstadisticas();
+		
 	}
 
 	private void clustering() 
@@ -254,8 +248,8 @@ public class PanelControl extends JPanel implements ActionListener
 		//Desactivamos el boton exportar en caso de eliminar todos los grafos
 		if(vista.panelDeControles.getComponents().length == 0)
 		{
-			vista.btnExportar.setBackground(vista.bordo);
 			vista.btnExportar.setEnabled(false);
+			vista.btnExportar.setForeground(Color.GRAY);
 		}
 	}
 	
@@ -276,6 +270,7 @@ public class PanelControl extends JPanel implements ActionListener
 		
 		JOptionPane.showMessageDialog(null, stats.toString(), "Estadisticas", JOptionPane.INFORMATION_MESSAGE);
 	}
+	
 	private void dibujarPuntos() 
 	{
 		MapMarkerDot punto;
@@ -319,4 +314,5 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		return modelo.getCoordenadas();
 	}
+	
 }

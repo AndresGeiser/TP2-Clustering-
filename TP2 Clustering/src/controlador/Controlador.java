@@ -1,5 +1,6 @@
 package controlador;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,8 +11,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -64,11 +71,8 @@ public class Controlador implements ActionListener
 						
 						if(marcasTemporales.size() > 0)
 						{
-							//Activamos boton guardar y deshacer
-							vista.btnGuardar.setEnabled(true);
-							vista.btnGuardar.setBackground(vista.rojo);
-							vista.btnDeshacer.setEnabled(true);
-							vista.btnDeshacer.setBackground(vista.rojo);
+							activarBoton(vista.btnGuardar, true);
+							activarBoton(vista.btnDeshacer, true);
 						}
 					}
 				}	
@@ -106,34 +110,22 @@ public class Controlador implements ActionListener
 		
 		if(e.getSource() == vista.btnNuevo) 
 		{
-			vista.btnNuevo.setEnabled(false);
-			vista.btnNuevo.setBackground(vista.bordo);
-			vista.btnImportar.setEnabled(false);
-			vista.btnImportar.setBackground(vista.bordo);
-			vista.btnExportar.setEnabled(false);
-			vista.btnExportar.setBackground(vista.bordo);
-			vista.btnCancelar.setEnabled(true);
-			vista.btnCancelar.setBackground(vista.rojo);
+			activarBoton(vista.btnNuevo, false);
+			activarBoton(vista.btnImportar, false);
+			activarBoton(vista.btnExportar, false);
+			activarBoton(vista.btnCancelar, true);
 		}
 		
 		if(e.getSource() == vista.btnCancelar) 
 		{
-			vista.btnNuevo.setEnabled(true);
-			vista.btnNuevo.setBackground(vista.rojo);
-			vista.btnImportar.setEnabled(true);
-			vista.btnImportar.setBackground(vista.rojo);
-			vista.btnCancelar.setEnabled(false);
-			vista.btnCancelar.setBackground(vista.bordo);
-			vista.btnDeshacer.setEnabled(false);
-			vista.btnDeshacer.setBackground(vista.bordo);
-			vista.btnGuardar.setEnabled(false);
-			vista.btnGuardar.setBackground(vista.bordo);
+			activarBoton(vista.btnNuevo, true);
+			activarBoton(vista.btnImportar, true);
+			activarBoton(vista.btnCancelar, false);
+			activarBoton(vista.btnDeshacer, false);
+			activarBoton(vista.btnGuardar, false);
 			
 			if(vista.panelDeControles.getComponents().length > 0)
-			{
-				vista.btnExportar.setEnabled(true);
-				vista.btnExportar.setBackground(vista.rojo);
-			}
+				activarBoton(vista.btnExportar, true);
 			
 			borrarMarcasTemporales();
 		}
@@ -144,16 +136,11 @@ public class Controlador implements ActionListener
 				
 			if(nombre != null) //Chequeamos si acepto
 			{
-				vista.btnNuevo.setEnabled(true);
-				vista.btnNuevo.setBackground(vista.rojo);
-				vista.btnImportar.setEnabled(true);
-				vista.btnImportar.setBackground(vista.rojo);
-				vista.btnCancelar.setEnabled(false);
-				vista.btnCancelar.setBackground(vista.bordo);
-				vista.btnGuardar.setEnabled(false);
-				vista.btnGuardar.setBackground(vista.bordo);
-				vista.btnDeshacer.setEnabled(false);
-				vista.btnDeshacer.setBackground(vista.bordo);
+				activarBoton(vista.btnNuevo, true);
+				activarBoton(vista.btnImportar, true);
+				activarBoton(vista.btnCancelar, false);
+				activarBoton(vista.btnGuardar, false);
+				activarBoton(vista.btnDeshacer, false);		
 				
 				for(MapMarkerDot marca : marcasTemporales)
 					modelo.agregarCoordenada(marca.getCoordinate());
@@ -167,27 +154,18 @@ public class Controlador implements ActionListener
 			}
 		}
 		
-		if(e.getSource() == vista.btnDeshacer) 
-		{
+		if(e.getSource() == vista.btnDeshacer)
 			borrarUltimaMarca();
 				
-			if(!hayMarcas())
-			{
-				vista.btnGuardar.setEnabled(false);
-				vista.btnGuardar.setBackground(vista.bordo);
-				vista.btnDeshacer.setEnabled(false);
-				vista.btnDeshacer.setBackground(vista.bordo);
-			}	
-		}	
+			
 	}
 	
 	private void buscarArchivo() 
 	{
 		JFileChooser jf = new JFileChooser();
-		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
-
-		jf.setFileFilter(filtro);
 		
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
+		jf.setFileFilter(filtro);
 		
 		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		{	
@@ -257,10 +235,10 @@ public class Controlador implements ActionListener
 		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
 		vista.panelDeControles.updateUI();
 		
-		vista.btnExportar.setBackground(vista.rojo);
-		vista.btnExportar.setEnabled(true);
+		activarBoton(vista.btnExportar, true);
 		
 		modelo = new Modelo();
+		
 	}
 	
 	private void borrarMarcasTemporales() 
@@ -277,8 +255,15 @@ public class Controlador implements ActionListener
 			int i = marcasTemporales.size() - 1;
 			vista.mapa.removeMapMarker(marcasTemporales.get(i));
 			marcasTemporales.remove(i);			
-		}
+		
+			if(!hayMarcas())
+			{
+				activarBoton(vista.btnGuardar, false);
+				activarBoton(vista.btnDeshacer, false);
+			}
+		}	
 	}
+	
 	
 	//METODOS AUXILIARES
 	private boolean estaMarcada(MapMarkerDot coordenada) 
@@ -294,5 +279,20 @@ public class Controlador implements ActionListener
 		if(marcasTemporales.size() > 0) 
 			return true;
 		return false;
+	}
+	
+	private void activarBoton(JButton boton , boolean b) 
+	{
+		if(b == true) 
+		{
+			boton.setEnabled(true);
+			boton.setForeground(Color.WHITE);
+			boton.setBackground(vista.rojo);
+		}
+		else 
+		{
+			boton.setEnabled(false);
+			boton.setForeground(Color.GRAY);
+		}
 	}
 }
