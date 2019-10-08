@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.ArrayList;
 
+import javax.management.RuntimeErrorException;
+
 public class AGM 
 {
 	private Grafo grafoAGM;
@@ -14,11 +16,19 @@ public class AGM
 		marcados = new boolean[grafo.tamano()];
 		aristas = new ArrayList<Arista>();
 		
+		verificarTamanio(grafo);
 		generarAGM(grafo);
+	}
+	
+	private void verificarTamanio(Grafo grafo) 
+	{
+		if ( grafo.tamano() == 0)
+			throw new IllegalArgumentException("El grafo no tiene vertices");
 	}
 	
 	private void generarAGM(Grafo grafo) 
 	{
+		
 		marcados[0] = true; //marco el inicial
 		
 		double aristaMinima = 0;
