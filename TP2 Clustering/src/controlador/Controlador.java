@@ -19,6 +19,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -162,23 +163,18 @@ public class Controlador implements ActionListener
 	
 	private void buscarArchivo() 
 	{
-		JFileChooser jf = new JFileChooser();
 		
+		JFileChooser jf = new JFileChooser();
+		jf.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
 		jf.setFileFilter(filtro);
 		
-		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
-		{	
-			leerArchivo(jf.getSelectedFile());	
-			
-			String nombreArchivo = jf.getSelectedFile().getName();
-			String nombre = nombreArchivo.substring(0, nombreArchivo.length() - 4); 
-	
-			colocarPanelControl(nombre);	
-		}
+		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+			leerArchivo(jf.getSelectedFiles());		
+		
 	}
 	
-	private void leerArchivo(File file)
+	private void leerArchivo(File[] archivos)
 	{	
 		try 
 		{
@@ -186,35 +182,44 @@ public class Controlador implements ActionListener
 			String longitud;	
 			String linea;
 			boolean llegoAlEspacio;
+			BufferedReader bf;
 			
-			BufferedReader bf = new BufferedReader(new FileReader(file));
-		
-			while(!(linea=bf.readLine()).equals(""))
+			for(File archivo : archivos)
 			{
-				llegoAlEspacio = false;
-				latitud = "";
-				longitud = "";
-				
-				for(int i=0; i < linea.length(); i++) 
+				 bf = new BufferedReader(new FileReader(archivo));
+			
+				while(!(linea=bf.readLine()).equals(""))
 				{
-					if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
-						i++;
+					llegoAlEspacio = false;
+					latitud = "";
+					longitud = "";
 					
-					if(llegoAlEspacio == false) 
+					for(int i=0; i < linea.length(); i++) 
 					{
-						if(linea.charAt(i) != ' ')
-							latitud += linea.charAt(i);
+						if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
+							i++;
+						
+						if(llegoAlEspacio == false) 
+						{
+							if(linea.charAt(i) != ' ')
+								latitud += linea.charAt(i);
+							else
+								llegoAlEspacio = true;
+						}
 						else
-							llegoAlEspacio = true;
+							longitud += linea.charAt(i);
 					}
-					else
-						longitud += linea.charAt(i);
+					
+					modelo.agregarCoordenada(new Coordinate(Double.parseDouble(latitud), Double.parseDouble(longitud)));
 				}
 				
-				modelo.agregarCoordenada(new Coordinate(Double.parseDouble(latitud), Double.parseDouble(longitud)));
+				bf.close();
+				
+				String nombreArchivo = archivo.getName();
+				String nombre = nombreArchivo.substring(0, nombreArchivo.length() - 4); 
+		
+				colocarPanelControl(nombre);
 			}
-			
-			bf.close();
 		}
 		catch (IOException e1)
 		{
