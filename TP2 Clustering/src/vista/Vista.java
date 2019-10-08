@@ -13,6 +13,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import java.awt.event.MouseAdapter;
 import javax.swing.border.LineBorder;
+import java.awt.Toolkit;
 
 public class Vista extends JFrame 
 {
@@ -26,6 +27,7 @@ public class Vista extends JFrame
 	
 	public Vista() 
 	{
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/iconos/iconPrincipal.png")));
 		this.setTitle("Clustering");
 		this.setResizable(false);
 		this.setBounds(100, 100, 977, 680);
