@@ -33,7 +33,7 @@ public class PanelControl extends JPanel implements ActionListener
 	private JLabel lblNombre;
 	private JTextField txtCantClusters;
 	private JCheckBox boxVisibilidad;
-	private JButton btnCentrar, btnEliminar, btnClustering;
+	private JButton btnCentrar, btnEliminar, btnClustering, btnEstadisticas;
 	
 	private ArrayList<MapMarkerDot> puntos;
 	private ArrayList<MapPolygonImpl> aristas;
@@ -99,6 +99,15 @@ public class PanelControl extends JPanel implements ActionListener
 		btnEliminar.setBorderPainted(false);
 		this.add(btnEliminar);
 		
+		btnEstadisticas = new JButton();
+		btnEstadisticas.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/estadistica.png")));
+		btnEstadisticas.setBounds(125, 7, 29, 23);
+		btnEstadisticas.setToolTipText("Ver estadisticas");
+		btnEstadisticas.setBackground(null);
+		btnEstadisticas.setFocusable(false);
+		btnEstadisticas.setBorderPainted(false);
+		this.add(btnEstadisticas);
+		
 		txtCantClusters = new JTextField();
 		txtCantClusters.setText("1");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
@@ -150,11 +159,14 @@ public class PanelControl extends JPanel implements ActionListener
 		btnCentrar.addMouseListener(efectoHover);
 		btnEliminar.addMouseListener(efectoHover);
 		btnClustering.addMouseListener(efectoHover);
+		btnEstadisticas.addMouseListener(efectoHover);
 	
 		boxVisibilidad.addActionListener(this);
 		btnCentrar.addActionListener(this);
 		btnEliminar.addActionListener(this);
 		btnClustering.addActionListener(this);	
+		btnEstadisticas.addActionListener(this);
+		
 	}
 
 	@Override
@@ -172,6 +184,8 @@ public class PanelControl extends JPanel implements ActionListener
 		if(e.getSource() == btnClustering)
 			clustering();
 		
+		if(e.getSource() == btnEstadisticas)
+			verEstadisticas();
 	}
 
 	private void clustering() 
@@ -251,6 +265,17 @@ public class PanelControl extends JPanel implements ActionListener
 		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
 	}
 	
+	private void verEstadisticas()
+	{
+		StringBuilder stats = new StringBuilder("");
+		stats.append("Cantidad de vertices: " + modelo.cantVertices() + "\n");
+		stats.append("Cantidad de Clusters: " + txtCantClusters.getText() + "\n");
+		stats.append("Peso total de aristas: " + modelo.getPesoTotal() + "\n");
+		stats.append("Desviacion Estandar ~ " + modelo.getDesviacionEstandar());
+		
+		
+		JOptionPane.showMessageDialog(null, stats.toString(), "Estadisticas", JOptionPane.INFORMATION_MESSAGE);
+	}
 	private void dibujarPuntos() 
 	{
 		MapMarkerDot punto;
@@ -294,5 +319,4 @@ public class PanelControl extends JPanel implements ActionListener
 	{
 		return modelo.getCoordenadas();
 	}
-	
 }

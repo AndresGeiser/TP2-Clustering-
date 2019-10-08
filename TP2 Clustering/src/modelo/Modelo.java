@@ -9,6 +9,9 @@ public class Modelo
 	private ArrayList<Arista> aristasGrafoOriginal = new ArrayList<Arista>();
 	private ArrayList<Coordinate> coordenadas;
 	
+	private double pesoTotal;
+	private double desviacionEstandar;
+	
 	public Modelo()
 	{
 		coordenadas = new ArrayList<Coordinate>();
@@ -26,6 +29,10 @@ public class Modelo
 		armarGrafoCompleto();
 		
 		grafoArbolMinimo();
+		
+		pesoTotal = pesoTotalAristas(aristasGrafoOriginal);
+		
+		desviacionEstandar = desviacionEstandar(aristasGrafoOriginal);
 		
 	}
 	private void armarGrafoCompleto()
@@ -91,6 +98,9 @@ public class Modelo
 			aristasAuxiliar.remove(aristaMaxima);
 			
 		}
+		
+		pesoTotalAristas(aristasAuxiliar);
+		desviacionEstandar(aristasAuxiliar);
 	}
 	
 	public ArrayList<Coordinate> getCoordenadas() 
@@ -102,5 +112,61 @@ public class Modelo
 	{
 		return grafo;
 	}
+	
+	public int cantVertices()
+	{
+		return grafo.tamano();
+	}
+	
+	private double pesoTotalAristas(ArrayList<Arista> aristas)
+	{
+		pesoTotal = 0;
+		for(Arista arista: aristas)
+			pesoTotal += arista.getPeso();
+		return pesoTotal;
+	}
 		
+	private double desviacionEstandar(ArrayList<Arista> aristas)
+	{
+		double sumaDif = 0;
+		double suma = 0;
+		double varianza;
+		ArrayList<Double> numeros = new ArrayList<Double>();
+		
+		
+		for(Arista arista: aristas) //Se realiza la sumatoria de todos los numeros
+		{
+			numeros.add(arista.getPeso());
+			suma += arista.getPeso();
+		}
+		
+		int conteo = numeros.size();   //se obtiene la cantidad de numeros
+		double promedio = suma/conteo; //Se toma la media
+		
+		for(Double numero: numeros) //Se resta a cada numero la media y se eleva al cuadrado 
+		{
+			numero = numero - promedio;
+			numero = Math.pow(numero, 2);
+			
+			sumaDif += numero; //Se suman las diferencias al cuadrado
+		}
+		
+		varianza = sumaDif/conteo;
+		
+		desviacionEstandar = Math.sqrt(varianza);
+		
+		return Math.sqrt(varianza); //retorna la raiz cuadrada de la varianza
+	}
+	
+	public double getPesoTotal()
+	{
+		return pesoTotal;
+	}
+	
+	public double getDesviacionEstandar()
+	{
+		return desviacionEstandar;
+	}
+	
+
 }

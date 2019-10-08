@@ -5,10 +5,10 @@ import java.util.Set;
 
 public class Grafo
 {
-	// Representamos el grafo por su matriz de adyacencia
+	// Representamos el grafo por su matriz de distancias
 	private double[][] A;
 	
-	// El conjunto de vértices está fijo
+	// El conjunto de vertices esta fijo
 	public Grafo(int vertices)
 	{
 		A = new double[vertices][vertices];
@@ -58,7 +58,7 @@ public class Grafo
 		return A.length;
 	}
 
-	// Lanza excepciones si los índices no son válidos
+	// Lanza excepciones si los indices no son validos
 	private void verificarIndices(int i, int j)
 	{
 		verificarVertice(i);

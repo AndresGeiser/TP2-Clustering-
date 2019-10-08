@@ -188,6 +188,7 @@ public class Controlador implements ActionListener
 
 		jf.setFileFilter(filtro);
 		
+		
 		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		{	
 			leerArchivo(jf.getSelectedFile());	
