@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
@@ -182,6 +184,9 @@ public class Controlador implements ActionListener
 	private void buscarArchivo() 
 	{
 		JFileChooser jf = new JFileChooser();
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
+
+		jf.setFileFilter(filtro);
 		
 		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) 
 		{	
