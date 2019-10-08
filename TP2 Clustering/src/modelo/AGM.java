@@ -2,7 +2,6 @@ package modelo;
 
 import java.util.ArrayList;
 
-import javax.management.RuntimeErrorException;
 
 public class AGM 
 {
