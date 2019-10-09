@@ -80,6 +80,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 		
 		panelDeOpciones = new JPanel();
 		panelDeOpciones.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		panelDeOpciones.setBackground(vista.gris1);
 		scrollPane.setViewportView(panelDeOpciones);
 		
 		btnCancelar = new JButton("Cancelar");
@@ -166,7 +167,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 					
 					if(existe(directorio)) 
 					{
-						crearArchivos(elegidos(), directorio);
+						crearArchivos(directorio);
 						JOptionPane.showMessageDialog(null, "Las coordenadas se han exportado exitosamente.", "Completado", JOptionPane.INFORMATION_MESSAGE);			
 						this.dispose();
 					}
@@ -185,7 +186,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 		
 	}
 	
-	private void crearArchivos(ArrayList<PanelControl> paneles, File ruta) 
+	private void crearArchivos(File directorio) 
 	{
 		try 
 		{	
@@ -193,12 +194,18 @@ public class VentanaExportar extends JDialog implements ActionListener
 			FileWriter fw;
 			BufferedWriter bw;
 			
-			for(PanelControl panel : paneles) 
+			for(PanelControl panel : elegidos()) 
 			{
-				archivo = new File(ruta + "\\" + panel.getNombre() + ".txt");
+				archivo = new File(directorio + "\\" + panel.getNombre() + ".txt");
 				
-				if(!archivo.exists())
-					archivo.createNewFile();
+				int i=0;
+				while(archivo.exists())
+				{
+					i++;
+					archivo.renameTo(new File(directorio + "\\" + panel.getNombre() + " (" + i + ")"+ ".txt"));
+				}
+			
+				archivo.createNewFile();
 				
 				fw = new FileWriter(archivo);
 				bw = new BufferedWriter(fw);
@@ -214,40 +221,25 @@ public class VentanaExportar extends JDialog implements ActionListener
 			
 			}
 		}
-		catch(IOException ioe)
-		{
+		catch(IOException ioe){
+			ioe.printStackTrace();
 		}
 	}
 	
 	private ArrayList<PanelControl> elegidos() 
 	{
+		Component[] componentes = vista.panelDeControles.getComponents();
+		
 		ArrayList<PanelControl> paneles = new ArrayList<PanelControl>();
 		
-		PanelControl panelControl;
-		for(JCheckBox seleccionado : seleccionados()) 
-		{
-			for(Component componente : vista.panelDeControles.getComponents())
-			{
-				panelControl = (PanelControl) componente;
-				
-				if(seleccionado.getText().equals(panelControl.getNombre()))
-					paneles.add(panelControl);
-				
-			}
-		}
+		
+		for(int i=0; i < opciones.size(); i++) 
+			if(opciones.get(i).isSelected())
+				paneles.add((PanelControl) componentes[i]);
+		
 		return paneles;
 	}
 	
-	private ArrayList<JCheckBox> seleccionados()
-	{
-		ArrayList<JCheckBox> selecionados = new ArrayList<JCheckBox>();
-	
-		for(JCheckBox opcion : opciones) 
-			if(opcion.isSelected())
-				selecionados.add(opcion);
-		
-		return selecionados;
-	}
 	
 	private boolean selecionoAlguno() 
 	{

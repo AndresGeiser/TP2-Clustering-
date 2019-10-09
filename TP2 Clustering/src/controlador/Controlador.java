@@ -104,7 +104,7 @@ public class Controlador implements ActionListener
 	public void actionPerformed(ActionEvent e) 
 	{
 		if(e.getSource() == vista.btnImportar )
-			buscarArchivo();;
+			buscarArchivos();;
 		
 		if(e.getSource() == vista.btnExportar)
 			exportar();
@@ -161,20 +161,19 @@ public class Controlador implements ActionListener
 			
 	}
 	
-	private void buscarArchivo() 
+	private void buscarArchivos() 
 	{
 		
 		JFileChooser jf = new JFileChooser();
 		jf.setMultiSelectionEnabled(true);
-		FileNameExtensionFilter filtro = new FileNameExtensionFilter("*.TXT", "txt");
-		jf.setFileFilter(filtro);
+		jf.setFileFilter(new FileNameExtensionFilter("*.TXT", "txt"));
 		
 		if(jf.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-			leerArchivo(jf.getSelectedFiles());		
+			leerArchivos(jf.getSelectedFiles());		
 		
 	}
 	
-	private void leerArchivo(File[] archivos)
+	private void leerArchivos(File[] archivos)
 	{	
 		try 
 		{
@@ -215,15 +214,14 @@ public class Controlador implements ActionListener
 				
 				bf.close();
 				
-				String nombreArchivo = archivo.getName();
-				String nombre = nombreArchivo.substring(0, nombreArchivo.length() - 4); 
-		
+				String nombre = archivo.getName().replace(".txt", "");
+				
 				colocarPanelControl(nombre);
 			}
 		}
-		catch (IOException e1)
+		catch (IOException ioe)
 		{
-			e1.printStackTrace();
+			ioe.printStackTrace();
 		}
 	}
 	

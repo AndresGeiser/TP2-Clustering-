@@ -95,7 +95,7 @@ public class PanelControl extends JPanel implements ActionListener
 		this.add(btnEliminar);
 		
 		btnEstadisticas = new JButton();
-		btnEstadisticas.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/estadistica.png")));
+		btnEstadisticas.setIcon(new ImageIcon(PanelControl.class.getResource("/iconos/iconEstadisticas.png")));
 		btnEstadisticas.setToolTipText("Ver estadisticas");
 		btnEstadisticas.setBackground(null);
 		btnEstadisticas.setBounds(125, 7, 29, 23);

@@ -30,9 +30,9 @@ public class Modelo
 		
 		grafoArbolMinimo();
 		
-		pesoTotal = pesoTotalAristas(aristasGrafoOriginal);
+		pesoTotalAristas(aristasGrafoOriginal);
 		
-		desviacionEstandar = desviacionEstandar(aristasGrafoOriginal);
+		desviacionEstandar(aristasGrafoOriginal);
 		
 	}
 	private void armarGrafoCompleto()
@@ -80,7 +80,6 @@ public class Modelo
 		
 	}
 	
-
 	private void eliminarAristasMayores(int n) //'n' cantidad de aristas a borrar
 	{
 		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
@@ -118,15 +117,14 @@ public class Modelo
 		return grafo.tamano();
 	}
 	
-	private double pesoTotalAristas(ArrayList<Arista> aristas)
+	private void pesoTotalAristas(ArrayList<Arista> aristas)
 	{
 		pesoTotal = 0;
 		for(Arista arista: aristas)
 			pesoTotal += arista.getPeso();
-		return pesoTotal;
 	}
 		
-	private double desviacionEstandar(ArrayList<Arista> aristas)
+	private void desviacionEstandar(ArrayList<Arista> aristas)
 	{
 		double sumaDif = 0;
 		double suma = 0;
@@ -155,7 +153,6 @@ public class Modelo
 		
 		desviacionEstandar = Math.sqrt(varianza);
 		
-		return Math.sqrt(varianza); //retorna la raiz cuadrada de la varianza
 	}
 	
 	public double getPesoTotal()
