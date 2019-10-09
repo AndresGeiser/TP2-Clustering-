@@ -18,13 +18,20 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import java.awt.event.MouseAdapter;
 import javax.swing.border.LineBorder;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.SwingConstants;
 
 public class Vista extends JFrame 
 {
 	public JButton btnNuevo, btnGuardar, btnDeshacer, btnCancelar, btnImportar, btnExportar;
-	private JPanel panelMapa;
+	public JPanel panelMapa;
 	public JMapViewer mapa;
-	private JScrollPane scrollPane;
+	public JTextField txtLatitud, txtLongitud;
+	public JLabel dibujoPlaneta;
+	
+	public JScrollPane scrollPaneControles;
 	public PanelDeControles panelDeControles;
 	
 	public Color gris1, gris2, rojo;
@@ -34,7 +41,7 @@ public class Vista extends JFrame
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/iconos/iconPrincipal.png")));
 		this.setTitle("Clustering");
 		this.setResizable(false);
-		this.setBounds(100, 100, 977, 680);
+		this.setBounds(100, 100, 967, 680);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.getContentPane().setLayout(null);
@@ -56,23 +63,49 @@ public class Vista extends JFrame
 		this.getContentPane().add(panelMapa);
 		
 		mapa = new JMapViewer();
+		mapa.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent m) {
+				
+				Coordinate coord = (Coordinate) mapa.getPosition(m.getPoint());
+				txtLatitud.setText("Lat : " + coord.getLat());
+				txtLongitud.setText("Lon : " + coord.getLon());
+			}
+		});
+
 		mapa.setBorder(new LineBorder(gris1, 4));
 		mapa.setBounds(0, 0, 620, 620);
 		mapa.setZoomContolsVisible(false);	
 		mapa.setDisplayPosition(new Coordinate(-34.52133782929332,-58.70068073272705), 13);
 		panelMapa.add(mapa);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(640, 87, 308, 544);
-		scrollPane.setBorder(null);
-		scrollPane.getVerticalScrollBar().setUnitIncrement(30);
-		this.getContentPane().add(scrollPane);
+		txtLatitud = new JTextField("Lat :");
+		txtLatitud.setFont(new Font("Arial Narrow", Font.PLAIN, 13));
+		txtLatitud.setBounds(10, 585, 165, 24);
+		txtLatitud.setEditable(false);
+		txtLatitud.setFocusable(false);
+		txtLatitud.setBackground(gris1);
+		mapa.add(txtLatitud);
+		
+		txtLongitud = new JTextField("Lon :");
+		txtLongitud.setFont(new Font("Arial Narrow", Font.PLAIN, 13));
+		txtLongitud.setBounds(445, 585, 165, 24);
+		txtLongitud.setEditable(false);
+		txtLongitud.setFocusable(false);
+		txtLongitud.setBackground(gris1);
+		mapa.add(txtLongitud);
+		
+		scrollPaneControles = new JScrollPane();
+		scrollPaneControles.setBounds(640, 87, 308, 407);
+		scrollPaneControles.setBorder(null);
+		scrollPaneControles.getVerticalScrollBar().setUnitIncrement(30);
+		this.getContentPane().add(scrollPaneControles);
 		
 		panelDeControles = new PanelDeControles();
 		panelDeControles.setBackground(gris1);
-		panelDeControles.setPreferredSize(new Dimension(260, 545));
+		panelDeControles.setPreferredSize(new Dimension(260, 408));
 		panelDeControles.setLayout(null);
-		scrollPane.setViewportView(panelDeControles);
+		scrollPaneControles.setViewportView(panelDeControles);
 		
 		btnImportar = new JButton("Importar");
 		btnImportar.setBorder(null);
@@ -129,6 +162,11 @@ public class Vista extends JFrame
 		btnCancelar.setBounds(898, 45, 50, 35);
 		this.getContentPane().add(btnCancelar);
 		
+		dibujoPlaneta = new JLabel("");
+		dibujoPlaneta.setIcon(new ImageIcon(Vista.class.getResource("/iconos/tierra (1).png")));
+		dibujoPlaneta.setBounds(720, 503, 128, 128);
+		this.getContentPane().add(dibujoPlaneta);
+		
 		
 		MouseAdapter efectoHover = new MouseAdapter()
 		{
@@ -159,5 +197,4 @@ public class Vista extends JFrame
 		btnDeshacer.addMouseListener(efectoHover);
 		
 	}
-	
 }

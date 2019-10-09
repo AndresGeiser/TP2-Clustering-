@@ -21,7 +21,7 @@ public class PanelDeControles extends JPanel
 		
 		y += panelControl.getHeight();
 		
-		if(this.getComponents().length > 10)
+		if(this.getComponents().length > 11)
 			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + panelControl.getHeight()));
 	}
 	
@@ -56,7 +56,7 @@ public class PanelDeControles extends JPanel
 			}
 		}
 		
-		if(this.getComponents().length >= 10)
+		if(this.getComponents().length >= 11)
 			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() - panelControl.getHeight()));
 	}
 	
