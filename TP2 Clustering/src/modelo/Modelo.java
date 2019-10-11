@@ -8,6 +8,7 @@ public class Modelo
 	private Grafo grafo;
 	private ArrayList<Arista> aristasGrafoOriginal = new ArrayList<Arista>();
 	private ArrayList<Coordinate> coordenadas;
+	private CalculosAuxiliares calcAux;
 	
 	private double pesoTotal;
 	private double desviacionEstandar;
@@ -15,6 +16,7 @@ public class Modelo
 	public Modelo()
 	{
 		coordenadas = new ArrayList<Coordinate>();
+		calcAux = new CalculosAuxiliares();
 	}
 	
 	public void agregarCoordenada(Coordinate coordenada)
@@ -32,31 +34,23 @@ public class Modelo
 		
 		pesoTotalAristas(aristasGrafoOriginal);
 		
-		desviacionEstandar(aristasGrafoOriginal);
+		calcAux.getDesviacion(aristasGrafoOriginal);
 		
 	}
+	
 	private void armarGrafoCompleto()
 	{
 		for (int i=0; i < coordenadas.size() - 1; i++)
 		{
 			for(int j= i+1; j < coordenadas.size(); j++)
 			{
-				double pesoArista = distanciaEuclidiana(coordenadas.get(i) , coordenadas.get(j));
+				double pesoArista = calcAux.getDistanciaEuclidea(coordenadas.get(i), coordenadas.get(j));
 				
 				grafo.agregarArista(i, j, pesoArista);
 			}
 		}
 	}
-	private double distanciaEuclidiana(Coordinate i, Coordinate j) 
-	{
-		double x1 = i.getLon();
-		double y1 = i.getLat();
-		
-		double x2 = j.getLon();
-		double y2 = j.getLat();
-		
-		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2-y1), 2));
-	}
+	
 	
 	private void grafoArbolMinimo() 
 	{
@@ -99,7 +93,7 @@ public class Modelo
 		}
 		
 		pesoTotalAristas(aristasAuxiliar);
-		desviacionEstandar(aristasAuxiliar);
+		calcAux.getDesviacion(aristasAuxiliar);
 	}
 	
 	public ArrayList<Coordinate> getCoordenadas() 
@@ -124,36 +118,6 @@ public class Modelo
 			pesoTotal += arista.getPeso();
 	}
 		
-	private void desviacionEstandar(ArrayList<Arista> aristas)
-	{
-		double sumaDif = 0;
-		double suma = 0;
-		double varianza;
-		ArrayList<Double> numeros = new ArrayList<Double>();
-		
-		
-		for(Arista arista: aristas) //Se realiza la sumatoria de todos los numeros
-		{
-			numeros.add(arista.getPeso());
-			suma += arista.getPeso();
-		}
-		
-		int conteo = numeros.size();   //se obtiene la cantidad de numeros
-		double promedio = suma/conteo; //Se toma la media
-		
-		for(Double numero: numeros) //Se resta a cada numero la media y se eleva al cuadrado 
-		{
-			numero = numero - promedio;
-			numero = Math.pow(numero, 2);
-			
-			sumaDif += numero; //Se suman las diferencias al cuadrado
-		}
-		
-		varianza = sumaDif/conteo;
-		
-		desviacionEstandar = Math.sqrt(varianza);
-		
-	}
 	
 	public double getPesoTotal()
 	{
