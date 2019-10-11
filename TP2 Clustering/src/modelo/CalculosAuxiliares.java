@@ -6,14 +6,12 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class CalculosAuxiliares 
 {
-	private double desviacion,pesoTotal;
+	private double desviacion;
 	
 	
 	public CalculosAuxiliares()
 	{
-		desviacion = 0;
-		pesoTotal = 0;
-				
+		desviacion = 0;				
 	}
 	
 	public double getDistanciaEuclidea(Coordinate i, Coordinate j) 
@@ -64,4 +62,5 @@ public class CalculosAuxiliares
 		desviacion =  Math.sqrt(varianza);
 		
 	}
+	
 }

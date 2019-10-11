@@ -32,9 +32,7 @@ public class Modelo
 		
 		grafoArbolMinimo();
 		
-		pesoTotalAristas(aristasGrafoOriginal);
-		
-		desviacionEstandar = calcAux.getDesviacion(aristasGrafoOriginal);
+		setPropiedades(aristasGrafoOriginal);
 		
 	}
 	
@@ -92,8 +90,20 @@ public class Modelo
 			
 		}
 		
-		pesoTotalAristas(aristasAuxiliar);
-		desviacionEstandar =  calcAux.getDesviacion(aristasAuxiliar);
+		setPropiedades(aristasAuxiliar);
+	}
+
+	private void setPropiedades(ArrayList<Arista> aristas) 
+	{
+		pesoTotalAristas(aristas);
+		desviacionEstandar =  calcAux.getDesviacion(aristas);
+	}
+	
+	private void pesoTotalAristas(ArrayList<Arista> aristas)
+	{
+		pesoTotal = 0;
+		for(Arista arista: aristas)
+			pesoTotal += arista.getPeso();
 	}
 	
 	public ArrayList<Coordinate> getCoordenadas() 
@@ -111,13 +121,6 @@ public class Modelo
 		return grafo.tamano();
 	}
 	
-	private void pesoTotalAristas(ArrayList<Arista> aristas)
-	{
-		pesoTotal = 0;
-		for(Arista arista: aristas)
-			pesoTotal += arista.getPeso();
-	}
-		
 	
 	public double getPesoTotal()
 	{
