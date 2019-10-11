@@ -56,12 +56,15 @@ public class Modelo
 		aristasGrafoOriginal = grafoAGM.getAristas();
 	}
 
-	//Elimina las n aristas con mayor peso
 	public void clustering(int n) 
 	{
 		armarGrafoOriginal();
 	
-		eliminarAristasMayores(n);
+		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
+		
+		eliminarAristasMayores(aristasAuxiliar, n-1);
+		
+		actualizarDatos(aristasAuxiliar, n);
 	}
 	
 	private void armarGrafoOriginal() 
@@ -71,25 +74,20 @@ public class Modelo
 		
 	}
 	
-	private void eliminarAristasMayores(int n)
+	private void eliminarAristasMayores(ArrayList<Arista> aristas, int n)
 	{
-		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
-		
 		Arista aristaMaxima;
-		for(int i=0; i < n - 1; i++)//'n-1' cantidad de aristas a borrar  
+		for(int i=0; i < n ; i++) 
 		{
-			aristaMaxima = aristasAuxiliar.get(0);
+			aristaMaxima = aristas.get(0);
 			
-			for(Arista arista : aristasAuxiliar)
+			for(Arista arista : aristas)
 				if(arista.getPeso() > aristaMaxima.getPeso())
 					aristaMaxima = arista;
 	
 			grafo.borrarArista(aristaMaxima.getVertice1(), aristaMaxima.getVertice2());
-			aristasAuxiliar.remove(aristaMaxima);
-			
+			aristas.remove(aristaMaxima);
 		}
-		
-		actualizarDatos(aristasAuxiliar, n);
 	}
 
 	private void actualizarDatos(ArrayList<Arista> aristas, int cantClusters) 
