@@ -131,8 +131,10 @@ public class VentanaExportar extends JDialog
 			opcion.setToolTipText(opcion.getText());
 			opcion.setPreferredSize(new Dimension(100,50));
 			
+			panelDeOpciones.add(opcion);
 			opciones.add(opcion);
 		}
+	
 		
 	}
 }
