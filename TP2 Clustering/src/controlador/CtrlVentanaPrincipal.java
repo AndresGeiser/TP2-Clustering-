@@ -26,20 +26,24 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 
 import modelo.Modelo;
-import vista.Vista;
+import vista.PanelGrafo;
+import vista.VentanaPrincipal;
 
-public class Controlador implements ActionListener
+public class CtrlVentanaPrincipal implements ActionListener
 {
 	private Modelo modelo;
-	private Vista vista;
+	private VentanaPrincipal vista;
 	
 	private ArrayList<MapMarkerDot> marcasTemporales;
+	private ArrayList<CtrlPanelGrafo> paneles;
 	
-	public Controlador(Modelo modelo, Vista vista) 
+	public CtrlVentanaPrincipal(Modelo modelo, VentanaPrincipal vista) 
 	{
 		this.modelo = modelo;
 		this.vista = vista;
 		marcasTemporales = new ArrayList<>();
+		
+		paneles = new ArrayList<CtrlPanelGrafo>();
 	
 		this.vista.btnImportar.addActionListener(this);
 		this.vista.btnExportar.addActionListener(this);
@@ -227,7 +231,7 @@ public class Controlador implements ActionListener
 	
 	private void exportar() 
 	{
-		VentanaExportar ventana = new VentanaExportar(vista, true);
+		VentanaExportar ventana = new VentanaExportar(vista ,paneles, true);
 		ventana.setVisible(true);
 	}
 	
@@ -235,7 +239,12 @@ public class Controlador implements ActionListener
 	{
 		modelo.armarGrafo();
 		
-		vista.panelDeControles.agregar(new PanelControl(nombre, modelo, vista));
+		
+		PanelGrafo panelGrafo = new PanelGrafo(nombre);
+		CtrlPanelGrafo n = new CtrlPanelGrafo(modelo, vista, panelGrafo);
+		paneles.add(n);
+		
+		vista.panelDeControles.agregar(panelGrafo);
 		vista.panelDeControles.updateUI();
 		
 		activarBoton(vista.btnExportar, true);

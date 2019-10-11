@@ -20,6 +20,8 @@ public class TestAGM
 		grafo = grafoAGM.getGrafoAGM();
 
 		assertFalse(grafo.existeArista(0, 2));
+		assertTrue(grafo.existeArista(0, 1));
+		assertTrue(grafo.existeArista(1, 2));
 	}
 
 	@Test
@@ -53,7 +55,7 @@ public class TestAGM
 	}
 	
 	@Test //Prueba que se elimine la segunda arista de mayor longitud
-	public void testTodasMismaArista()
+	public void testTodasMismoPeso()
 	{
 		Grafo grafo = new Grafo(3);
 		

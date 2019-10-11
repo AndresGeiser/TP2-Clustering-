@@ -2,8 +2,8 @@ package vista;
 
 import java.awt.Component;
 import java.awt.Dimension;
+
 import javax.swing.JPanel;
-import controlador.PanelControl;
 
 public class PanelDeControles extends JPanel
 {
@@ -14,7 +14,7 @@ public class PanelDeControles extends JPanel
 		y = 0;
 	}
 	
-	public void agregar(PanelControl panelControl)
+	public void agregar(PanelGrafo panelControl)
 	{
 		panelControl.setBounds(0, y, this.getWidth(), 37);
 		this.add(panelControl);
@@ -25,7 +25,7 @@ public class PanelDeControles extends JPanel
 			this.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() + panelControl.getHeight()));
 	}
 	
-	public void eliminar(PanelControl panelControl) 
+	public void eliminar(PanelGrafo panelControl) 
 	{
 		Component[] componentes = this.getComponents();
 		

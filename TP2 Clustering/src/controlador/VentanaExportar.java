@@ -4,7 +4,7 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
-import vista.Vista;
+import vista.VentanaPrincipal;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -35,7 +35,7 @@ import java.awt.Toolkit;
 
 public class VentanaExportar extends JDialog implements ActionListener
 {
-	private Vista vista;
+	private VentanaPrincipal vista;
 
 	private JLabel lblMensaje;
 	private JButton btnCancelar;
@@ -43,9 +43,10 @@ public class VentanaExportar extends JDialog implements ActionListener
 	private JScrollPane scrollPane;
 	private JPanel panelDeOpciones;
 	
+	private ArrayList<CtrlPanelGrafo> controles;
 	private ArrayList<JCheckBox> opciones;
 	
-	public VentanaExportar(Vista vista, boolean b) 
+	public VentanaExportar(VentanaPrincipal vista, ArrayList<CtrlPanelGrafo> controles, boolean b) 
 	{
 		super(vista, b);
 		
@@ -58,6 +59,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 		this.getContentPane().setLayout(null);
 	
 		this.vista = vista;
+		this.controles = controles;
 		
 		opciones = new ArrayList<JCheckBox>();
 		
@@ -134,15 +136,11 @@ public class VentanaExportar extends JDialog implements ActionListener
 	//Metodo que obtiene el nombre de cada conjunto de coordenadas y las pone como opciones a exportar
 	private void colocarOpciones() 
 	{
-		Component[] componentes = vista.panelDeControles.getComponents(); 
-		
 		JCheckBox checkBox;
-		PanelControl panelControl;
-		for(Component componente : componentes) 
-		{
-			panelControl = (PanelControl) componente;
-			
-			checkBox = new JCheckBox(panelControl.getNombre());
+		
+		for(CtrlPanelGrafo control : controles) 
+		{	
+			checkBox = new JCheckBox(control.getNombre());
 			checkBox.setToolTipText(checkBox.getText());
 			checkBox.setPreferredSize(new Dimension(100,50));
 			
@@ -194,7 +192,7 @@ public class VentanaExportar extends JDialog implements ActionListener
 			FileWriter fw;
 			BufferedWriter bw;
 			
-			for(PanelControl panel : elegidos()) 
+			for(CtrlPanelGrafo panel : elegidos()) 
 			{
 				archivo = new File(directorio + "\\" + panel.getNombre() + ".txt");
 				
@@ -226,16 +224,16 @@ public class VentanaExportar extends JDialog implements ActionListener
 		}
 	}
 	
-	private ArrayList<PanelControl> elegidos() 
+	private ArrayList<CtrlPanelGrafo> elegidos() 
 	{
-		Component[] componentes = vista.panelDeControles.getComponents();
 		
-		ArrayList<PanelControl> paneles = new ArrayList<PanelControl>();
+		
+		ArrayList<CtrlPanelGrafo> paneles = new ArrayList<CtrlPanelGrafo>();
 		
 		
 		for(int i=0; i < opciones.size(); i++) 
 			if(opciones.get(i).isSelected())
-				paneles.add((PanelControl) componentes[i]);
+				paneles.add(controles.get(i));
 		
 		return paneles;
 	}

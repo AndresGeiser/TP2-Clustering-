@@ -23,7 +23,7 @@ import javax.swing.JTextField;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.SwingConstants;
 
-public class Vista extends JFrame 
+public class VentanaPrincipal extends JFrame 
 {
 	public JButton btnNuevo, btnGuardar, btnDeshacer, btnCancelar, btnImportar, btnExportar;
 	public JPanel panelMapa;
@@ -36,9 +36,9 @@ public class Vista extends JFrame
 	
 	public Color gris1, gris2, rojo;
 	
-	public Vista() 
+	public VentanaPrincipal() 
 	{
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(Vista.class.getResource("/iconos/iconPrincipal.png")));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaPrincipal.class.getResource("/iconos/iconPrincipal.png")));
 		this.setTitle("Clustering");
 		this.setResizable(false);
 		this.setBounds(100, 100, 967, 680);
@@ -109,7 +109,7 @@ public class Vista extends JFrame
 		
 		btnImportar = new JButton("Importar");
 		btnImportar.setBorder(null);
-		btnImportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/importar24.png")));
+		btnImportar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/importar24.png")));
 		btnImportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnImportar.setBounds(640, 11, 150, 35);
 		btnImportar.setBackground(rojo);
@@ -118,7 +118,7 @@ public class Vista extends JFrame
 		
 		btnExportar = new JButton("Exportar");
 		btnExportar.setBorder(null);
-		btnExportar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/exportar24.png")));
+		btnExportar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/exportar24.png")));
 		btnExportar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnExportar.setBounds(798, 11, 150, 35);
 		btnExportar.setBackground(rojo);
@@ -128,7 +128,7 @@ public class Vista extends JFrame
 		
 		btnNuevo = new JButton("Nuevo");
 		btnNuevo.setBorder(null);
-		btnNuevo.setIcon(new ImageIcon(Vista.class.getResource("/iconos/puntero.png")));
+		btnNuevo.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/puntero.png")));
 		btnNuevo.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnNuevo.setBounds(640, 45, 150, 35);
 		btnNuevo.setBackground(rojo);
@@ -137,7 +137,7 @@ public class Vista extends JFrame
 		
 		btnGuardar = new JButton();
 		btnGuardar.setBorder(null);
-		btnGuardar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/guardar24.png")));
+		btnGuardar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/guardar24.png")));
 		btnGuardar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnGuardar.setBounds(798, 45, 50, 35);
 		btnGuardar.setForeground(Color.WHITE);
@@ -146,7 +146,7 @@ public class Vista extends JFrame
 		
 		btnDeshacer = new JButton();
 		btnDeshacer.setBorder(null);
-		btnDeshacer.setIcon(new ImageIcon(Vista.class.getResource("/iconos/deshacer24.png")));
+		btnDeshacer.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/deshacer24.png")));
 		btnDeshacer.setForeground(Color.WHITE);
 		btnDeshacer.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnDeshacer.setEnabled(false);
@@ -155,7 +155,7 @@ public class Vista extends JFrame
 		
 		btnCancelar = new JButton();
 		btnCancelar.setBorder(null);
-		btnCancelar.setIcon(new ImageIcon(Vista.class.getResource("/iconos/cruz24.png")));
+		btnCancelar.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/cruz24.png")));
 		btnCancelar.setForeground(Color.WHITE);
 		btnCancelar.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnCancelar.setEnabled(false);
@@ -163,7 +163,7 @@ public class Vista extends JFrame
 		this.getContentPane().add(btnCancelar);
 		
 		dibujoPlaneta = new JLabel("");
-		dibujoPlaneta.setIcon(new ImageIcon(Vista.class.getResource("/iconos/tierra (1).png")));
+		dibujoPlaneta.setIcon(new ImageIcon(VentanaPrincipal.class.getResource("/iconos/tierra (1).png")));
 		dibujoPlaneta.setBounds(720, 503, 128, 128);
 		this.getContentPane().add(dibujoPlaneta);
 		
