@@ -42,9 +42,6 @@ public class CtrlPanelGrafo implements ActionListener
 		puntos = new ArrayList<MapMarkerDot>();
 		aristas = new ArrayList<MapPolygonImpl>();
 		
-		dibujarPuntos();
-		dibujarAristas();
-		
 		this.panelGrafo.boxVisibilidad.addActionListener(this);
 		this.panelGrafo.btnCentrar.addActionListener(this);
 		this.panelGrafo.btnEliminar.addActionListener(this);
@@ -55,6 +52,10 @@ public class CtrlPanelGrafo implements ActionListener
 	public void iniciar() 
 	{
 		modelo.armarGrafo();
+		
+		dibujarPuntos();
+		dibujarAristas();
+		
 		vista.panelDeControles.agregar(panelGrafo);
 		vista.panelDeControles.updateUI();
 	}
