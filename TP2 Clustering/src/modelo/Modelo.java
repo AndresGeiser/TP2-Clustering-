@@ -34,7 +34,7 @@ public class Modelo
 		
 		pesoTotalAristas(aristasGrafoOriginal);
 		
-		calcAux.getDesviacion(aristasGrafoOriginal);
+		desviacionEstandar = calcAux.getDesviacion(aristasGrafoOriginal);
 		
 	}
 	
@@ -93,7 +93,7 @@ public class Modelo
 		}
 		
 		pesoTotalAristas(aristasAuxiliar);
-		calcAux.getDesviacion(aristasAuxiliar);
+		desviacionEstandar =  calcAux.getDesviacion(aristasAuxiliar);
 	}
 	
 	public ArrayList<Coordinate> getCoordenadas() 

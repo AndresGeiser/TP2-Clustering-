@@ -2,9 +2,9 @@ package principal;
 
 import javax.swing.UIManager;
 
-import controlador.Controlador;
+import controlador.CtrlVentanaPrincipal;
 import modelo.Modelo;
-import vista.Vista;
+import vista.VentanaPrincipal;
 
 public class Principal 
 {
@@ -18,9 +18,9 @@ public class Principal
 		}
 		
 		Modelo modelo = new Modelo();
-		Vista vista = new Vista();
+		VentanaPrincipal vista = new VentanaPrincipal();
 
-		Controlador controlador = new Controlador(modelo, vista);		
+		CtrlVentanaPrincipal controlador = new CtrlVentanaPrincipal(modelo, vista);		
 		controlador.iniciar();		
 	}
 
