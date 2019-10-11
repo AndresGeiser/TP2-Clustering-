@@ -20,8 +20,6 @@ public class TestAGM
 		grafo = grafoAGM.getGrafoAGM();
 
 		assertFalse(grafo.existeArista(0, 2));
-		assertTrue(grafo.existeArista(0, 1));
-		assertTrue(grafo.existeArista(1, 2));
 	}
 
 	@Test
@@ -39,6 +37,21 @@ public class TestAGM
 		assertFalse(grafo.existeArista(2, 0));
 	}
 	
+	@Test 
+	public void testConservarMenores()
+	{
+		Grafo grafo = new Grafo(3);
+		
+		grafo.agregarArista(0, 1, 10);
+		grafo.agregarArista(1, 2, 5);
+		grafo.agregarArista(0, 2, 16);
+		
+		AGM grafoAGM = new AGM(grafo);
+		grafo = grafoAGM.getGrafoAGM();
+
+		assertTrue(grafo.existeArista(0, 1) && grafo.existeArista(1, 2));
+		
+	}
 	@Test //Prueba que se elimine alguna de las aristas
 	public void testAristasIguales()
 	{
