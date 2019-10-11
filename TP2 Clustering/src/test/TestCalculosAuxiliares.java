@@ -16,7 +16,6 @@ public class TestCalculosAuxiliares {
 	{
 		ArrayList<Arista> aristas = new ArrayList<Arista>();
 
-
 		aristas.add(new Arista(0,1,1));
 		aristas.add(new Arista(0,2,10));
 		

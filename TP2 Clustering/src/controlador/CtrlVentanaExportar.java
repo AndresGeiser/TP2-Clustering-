@@ -39,25 +39,8 @@ public class CtrlVentanaExportar implements ActionListener
 		if(ae.getSource() == this.vExportar.btnExportar) 
 		{	
 			if(selecionoAlguno())
-			{
-				JFileChooser guardar = new JFileChooser();
-				guardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				
-				if(guardar.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
-				{	
-					File directorio = guardar.getSelectedFile();
-					
-					if(existe(directorio)) 
-					{
-						crearArchivos(directorio);
-						JOptionPane.showMessageDialog(null, "Las coordenadas se han exportado exitosamente.", "Completado", JOptionPane.INFORMATION_MESSAGE);			
-						vExportar.dispose();
-					}
-					else
-						JOptionPane.showMessageDialog(null, "El directorio " + directorio + " no existe.", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-		
-			}
+				elegirDirectorio();
+			
 			else	
 				JOptionPane.showMessageDialog(null, "Selecione alguno !!", "Atencion", JOptionPane.WARNING_MESSAGE);
 			
@@ -66,6 +49,26 @@ public class CtrlVentanaExportar implements ActionListener
 		if(ae.getSource() == vExportar.btnCancelar)
 			vExportar.dispose();
 		
+	}
+
+	private void elegirDirectorio() 
+	{
+		JFileChooser guardar = new JFileChooser();
+		guardar.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		
+		if(guardar.showSaveDialog(null) == JFileChooser.APPROVE_OPTION)
+		{	
+			File directorio = guardar.getSelectedFile();
+			
+			if(existe(directorio)) 
+			{
+				crearArchivos(directorio);
+				JOptionPane.showMessageDialog(null, "Las coordenadas se han exportado exitosamente.", "Completado", JOptionPane.INFORMATION_MESSAGE);			
+				vExportar.dispose();
+			}
+			else
+				JOptionPane.showMessageDialog(null, "El directorio " + directorio + " no existe.", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	private void crearArchivos(File directorio) 

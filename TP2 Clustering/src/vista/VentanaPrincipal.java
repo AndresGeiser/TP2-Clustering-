@@ -3,8 +3,6 @@ package vista;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,8 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import java.awt.event.MouseAdapter;
@@ -21,7 +17,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.MouseMotionAdapter;
-import javax.swing.SwingConstants;
 
 public class VentanaPrincipal extends JFrame 
 {
@@ -34,7 +29,7 @@ public class VentanaPrincipal extends JFrame
 	public JScrollPane scrollPaneControles;
 	public PanelDeControles panelDeControles;
 	
-	public Color gris1, gris2, rojo;
+	public Color gris1, rojo;
 	
 	public VentanaPrincipal() 
 	{
@@ -47,7 +42,6 @@ public class VentanaPrincipal extends JFrame
 		this.getContentPane().setLayout(null);
 		
 		gris1 = new Color(179, 182, 183);
-		gris2 = new Color(62, 54, 54);
 		rojo = new Color(201, 47, 47);
 
 		iniComponentes();	
@@ -68,8 +62,8 @@ public class VentanaPrincipal extends JFrame
 			public void mouseMoved(MouseEvent m) {
 				
 				Coordinate coord = (Coordinate) mapa.getPosition(m.getPoint());
-				txtLatitud.setText("Lat : " + coord.getLat());
-				txtLongitud.setText("Lon : " + coord.getLon());
+				txtLatitud.setText("Lat: " + coord.getLat());
+				txtLongitud.setText("Lon: " + coord.getLon());
 			}
 		});
 

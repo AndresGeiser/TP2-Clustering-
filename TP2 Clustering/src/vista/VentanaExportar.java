@@ -117,6 +117,7 @@ public class VentanaExportar extends JDialog
 		
 	}
 
+	
 	private void colocarOpciones() 
 	{
 		Component[] componentes = vPrincipal.panelDeControles.getComponents();
@@ -134,7 +135,7 @@ public class VentanaExportar extends JDialog
 			panelDeOpciones.add(opcion);
 			opciones.add(opcion);
 		}
-	
-		
 	}
+	
+	
 }

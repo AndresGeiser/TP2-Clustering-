@@ -6,7 +6,6 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class CalculosAuxiliares 
 {
-	
 	public static double distanciaEuclidea(Coordinate i, Coordinate j) 
 	{
 		double x1 = i.getLon();

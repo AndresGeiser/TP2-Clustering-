@@ -67,11 +67,9 @@ public class CtrlVentanaPrincipal implements ActionListener
 							marcasTemporales.add(marca);
 						}
 						
-						if(marcasTemporales.size() > 0)
-						{
-							activarBoton(vista.btnGuardar, true);
-							activarBoton(vista.btnDeshacer, true);
-						}
+						setBoton(vista.btnGuardar, true);
+						setBoton(vista.btnDeshacer, true);
+	
 					}
 				}	
 			}
@@ -108,22 +106,22 @@ public class CtrlVentanaPrincipal implements ActionListener
 		
 		if(e.getSource() == vista.btnNuevo) 
 		{
-			activarBoton(vista.btnNuevo, false);
-			activarBoton(vista.btnImportar, false);
-			activarBoton(vista.btnExportar, false);
-			activarBoton(vista.btnCancelar, true);
+			setBoton(vista.btnNuevo, false);
+			setBoton(vista.btnImportar, false);
+			setBoton(vista.btnExportar, false);
+			setBoton(vista.btnCancelar, true);
 		}
 		
 		if(e.getSource() == vista.btnCancelar) 
 		{
-			activarBoton(vista.btnNuevo, true);
-			activarBoton(vista.btnImportar, true);
-			activarBoton(vista.btnCancelar, false);
-			activarBoton(vista.btnDeshacer, false);
-			activarBoton(vista.btnGuardar, false);
+			setBoton(vista.btnNuevo, true);
+			setBoton(vista.btnImportar, true);
+			setBoton(vista.btnCancelar, false);
+			setBoton(vista.btnDeshacer, false);
+			setBoton(vista.btnGuardar, false);
 			
 			if(vista.panelDeControles.getComponents().length > 0)
-				activarBoton(vista.btnExportar, true);
+				setBoton(vista.btnExportar, true);
 			
 			borrarMarcasTemporales();
 		}
@@ -134,11 +132,11 @@ public class CtrlVentanaPrincipal implements ActionListener
 				
 			if(nombre != null) //Chequeamos si acepto
 			{
-				activarBoton(vista.btnNuevo, true);
-				activarBoton(vista.btnImportar, true);
-				activarBoton(vista.btnCancelar, false);
-				activarBoton(vista.btnGuardar, false);
-				activarBoton(vista.btnDeshacer, false);		
+				setBoton(vista.btnNuevo, true);
+				setBoton(vista.btnImportar, true);
+				setBoton(vista.btnCancelar, false);
+				setBoton(vista.btnGuardar, false);
+				setBoton(vista.btnDeshacer, false);		
 				
 				for(MapMarkerDot marca : marcasTemporales)
 					modelo.agregarCoordenada(marca.getCoordinate());
@@ -190,7 +188,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 					longitud = "";
 					
 					for(int i=0; i < linea.length(); i++) 
-					{	
+					{		
 						if(llegoAlEspacio == false) 
 						{
 							if(linea.charAt(i) != ' ')
@@ -235,7 +233,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 		
 		ctrlPanelesGrafos.add(ctrlPanelGrafo);
 		
-		activarBoton(vista.btnExportar, true);
+		setBoton(vista.btnExportar, true);
 		
 		modelo = new Modelo();
 		
@@ -258,8 +256,8 @@ public class CtrlVentanaPrincipal implements ActionListener
 		
 			if(!hayMarcas())
 			{
-				activarBoton(vista.btnGuardar, false);
-				activarBoton(vista.btnDeshacer, false);
+				setBoton(vista.btnGuardar, false);
+				setBoton(vista.btnDeshacer, false);
 			}
 		}	
 	}
@@ -281,18 +279,19 @@ public class CtrlVentanaPrincipal implements ActionListener
 		return false;
 	}
 	
-	private void activarBoton(JButton boton , boolean b) 
+	
+	private void setBoton(JButton boton , boolean b)//Activa o desactiva el boton 
 	{
+		boton.setEnabled(b);
+		
 		if(b == true) 
 		{
-			boton.setEnabled(true);
 			boton.setForeground(Color.WHITE);
 			boton.setBackground(vista.rojo);
 		}
-		else 
-		{
-			boton.setEnabled(false);
+		
+		else
 			boton.setForeground(Color.GRAY);
-		}
+		
 	}
 }

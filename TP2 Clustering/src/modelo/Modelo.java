@@ -120,6 +120,7 @@ public class Modelo
 	{
 		return grafo.tamano();
 	}
+	
 	public int cantClusters() 
 	{
 		return cantClusters;
