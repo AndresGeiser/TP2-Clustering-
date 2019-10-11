@@ -8,15 +8,14 @@ public class Modelo
 	private Grafo grafo;
 	private ArrayList<Arista> aristasGrafoOriginal = new ArrayList<Arista>();
 	private ArrayList<Coordinate> coordenadas;
-	private CalculosAuxiliares calcAux;
 	
 	private double pesoTotal;
 	private double desviacionEstandar;
+	private int cantClusters;
 	
 	public Modelo()
 	{
 		coordenadas = new ArrayList<Coordinate>();
-		calcAux = new CalculosAuxiliares();
 	}
 	
 	public void agregarCoordenada(Coordinate coordenada)
@@ -32,7 +31,7 @@ public class Modelo
 		
 		grafoArbolMinimo();
 		
-		setPropiedades(aristasGrafoOriginal);
+		actualizarDatos(aristasGrafoOriginal, 1);
 		
 	}
 	
@@ -42,7 +41,7 @@ public class Modelo
 		{
 			for(int j= i+1; j < coordenadas.size(); j++)
 			{
-				double pesoArista = calcAux.getDistanciaEuclidea(coordenadas.get(i), coordenadas.get(j));
+				double pesoArista = CalculosAuxiliares.distanciaEuclidea(coordenadas.get(i), coordenadas.get(j));
 				
 				grafo.agregarArista(i, j, pesoArista);
 			}
@@ -62,7 +61,7 @@ public class Modelo
 	{
 		armarGrafoOriginal();
 	
-		eliminarAristasMayores(n - 1);
+		eliminarAristasMayores(n);
 	}
 	
 	private void armarGrafoOriginal() 
@@ -72,12 +71,12 @@ public class Modelo
 		
 	}
 	
-	private void eliminarAristasMayores(int n) //'n' cantidad de aristas a borrar
+	private void eliminarAristasMayores(int n)
 	{
 		ArrayList<Arista> aristasAuxiliar = (ArrayList<Arista>) aristasGrafoOriginal.clone();//copiamos las aristas en una auxiliar para no perder sus valores
-		Arista aristaMaxima;
 		
-		for(int i=0; i < n; i++) 
+		Arista aristaMaxima;
+		for(int i=0; i < n - 1; i++)//'n-1' cantidad de aristas a borrar  
 		{
 			aristaMaxima = aristasAuxiliar.get(0);
 			
@@ -90,13 +89,14 @@ public class Modelo
 			
 		}
 		
-		setPropiedades(aristasAuxiliar);
+		actualizarDatos(aristasAuxiliar, n);
 	}
 
-	private void setPropiedades(ArrayList<Arista> aristas) 
+	private void actualizarDatos(ArrayList<Arista> aristas, int cantClusters) 
 	{
 		pesoTotalAristas(aristas);
-		desviacionEstandar =  calcAux.getDesviacion(aristas);
+		desviacionEstandar =  CalculosAuxiliares.desviacionEstandar(aristas);
+		this.cantClusters = cantClusters;
 	}
 	
 	private void pesoTotalAristas(ArrayList<Arista> aristas)
@@ -120,14 +120,17 @@ public class Modelo
 	{
 		return grafo.tamano();
 	}
+	public int cantClusters() 
+	{
+		return cantClusters;
+	}
 	
-	
-	public double getPesoTotal()
+	public double pesoTotal()
 	{
 		return pesoTotal;
 	}
 	
-	public double getDesviacionEstandar()
+	public double desviacionEstandar()
 	{
 		return desviacionEstandar;
 	}

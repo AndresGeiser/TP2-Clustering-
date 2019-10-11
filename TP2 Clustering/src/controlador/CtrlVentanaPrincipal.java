@@ -11,22 +11,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
-
 import modelo.Modelo;
 import vista.PanelGrafo;
+import vista.VentanaExportar;
 import vista.VentanaPrincipal;
 
 public class CtrlVentanaPrincipal implements ActionListener
@@ -35,7 +28,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 	private VentanaPrincipal vista;
 	
 	private ArrayList<MapMarkerDot> marcasTemporales;
-	private ArrayList<CtrlPanelGrafo> paneles;
+	private ArrayList<CtrlPanelGrafo> ctrlPanelesGrafos;
 	
 	public CtrlVentanaPrincipal(Modelo modelo, VentanaPrincipal vista) 
 	{
@@ -43,7 +36,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 		this.vista = vista;
 		marcasTemporales = new ArrayList<>();
 		
-		paneles = new ArrayList<CtrlPanelGrafo>();
+		ctrlPanelesGrafos = new ArrayList<CtrlPanelGrafo>();
 	
 		this.vista.btnImportar.addActionListener(this);
 		this.vista.btnExportar.addActionListener(this);
@@ -155,7 +148,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 				if(nombre.equals(""))
 					nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
 				
-				colocarPanelControl(nombre);
+				colocarPanelGrafo(nombre);
 			}
 		}
 		
@@ -167,7 +160,6 @@ public class CtrlVentanaPrincipal implements ActionListener
 	
 	private void buscarArchivos() 
 	{
-		
 		JFileChooser jf = new JFileChooser();
 		jf.setMultiSelectionEnabled(true);
 		jf.setFileFilter(new FileNameExtensionFilter("*.TXT", "txt"));
@@ -198,10 +190,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 					longitud = "";
 					
 					for(int i=0; i < linea.length(); i++) 
-					{
-						if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
-							i++;
-						
+					{	
 						if(llegoAlEspacio == false) 
 						{
 							if(linea.charAt(i) != ' ')
@@ -220,7 +209,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 				
 				String nombre = archivo.getName().replace(".txt", "");
 				
-				colocarPanelControl(nombre);
+				colocarPanelGrafo(nombre);
 			}
 		}
 		catch (IOException ioe)
@@ -231,21 +220,20 @@ public class CtrlVentanaPrincipal implements ActionListener
 	
 	private void exportar() 
 	{
-		VentanaExportar ventana = new VentanaExportar(vista ,paneles, true);
-		ventana.setVisible(true);
+		VentanaExportar vExportar = new VentanaExportar(vista , true);
+		
+		CtrlVentanaExportar ctrlVentanaExportar = new CtrlVentanaExportar(vExportar, ctrlPanelesGrafos);
+		ctrlVentanaExportar.iniciar();
 	}
 	
-	private void colocarPanelControl(String nombre) 
-	{
-		modelo.armarGrafo();
-		
-		
+	private void colocarPanelGrafo(String nombre) 
+	{		
 		PanelGrafo panelGrafo = new PanelGrafo(nombre);
-		CtrlPanelGrafo n = new CtrlPanelGrafo(modelo, vista, panelGrafo);
-		paneles.add(n);
 		
-		vista.panelDeControles.agregar(panelGrafo);
-		vista.panelDeControles.updateUI();
+		CtrlPanelGrafo ctrlPanelGrafo = new CtrlPanelGrafo(modelo, vista, panelGrafo);	
+		ctrlPanelGrafo.iniciar();
+		
+		ctrlPanelesGrafos.add(ctrlPanelGrafo);
 		
 		activarBoton(vista.btnExportar, true);
 		

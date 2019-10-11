@@ -6,15 +6,8 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 public class CalculosAuxiliares 
 {
-	private double desviacion;
 	
-	
-	public CalculosAuxiliares()
-	{
-		desviacion = 0;				
-	}
-	
-	public double getDistanciaEuclidea(Coordinate i, Coordinate j) 
+	public static double distanciaEuclidea(Coordinate i, Coordinate j) 
 	{
 		double x1 = i.getLon();
 		double y1 = i.getLat();
@@ -24,15 +17,8 @@ public class CalculosAuxiliares
 		
 		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2-y1), 2));
 	}
-
-	public double getDesviacion(ArrayList<Arista> aristas)
-	{
-		desviacionEstandar(aristas);
-		return desviacion;
-		
-	}
 	
-	private void desviacionEstandar(ArrayList<Arista> aristas)
+	public static double desviacionEstandar(ArrayList<Arista> aristas)
 	{
 		double sumaDif = 0;
 		double suma = 0;
@@ -59,7 +45,7 @@ public class CalculosAuxiliares
 		
 		varianza = sumaDif/conteo;
 		
-		desviacion =  Math.sqrt(varianza);
+		return Math.sqrt(varianza);
 		
 	}
 	

@@ -32,24 +32,31 @@ public class CtrlPanelGrafo implements ActionListener
 		this.modelo = modelo;
 		this.vista = vista;
 		this.panelGrafo = panelGrafo;
-		
-		puntos = new ArrayList<MapMarkerDot>();
-		aristas = new ArrayList<MapPolygonImpl>();
+		this.panelGrafo.txtCantClusters.setToolTipText("Max: " + modelo.getCoordenadas().size());
 		
 		int r = (int)(Math.random()*256);
 		int g = (int)(Math.random()*256);
 		int b = (int)(Math.random()*256);
 		colorGrafo = new Color(r, g, b);
 		
+		puntos = new ArrayList<MapMarkerDot>();
+		aristas = new ArrayList<MapPolygonImpl>();
+		
 		dibujarPuntos();
 		dibujarAristas();
 		
-		panelGrafo.boxVisibilidad.addActionListener(this);
-		panelGrafo.btnCentrar.addActionListener(this);
-		panelGrafo.btnEliminar.addActionListener(this);
-		panelGrafo.btnClustering.addActionListener(this);
-		panelGrafo.btnEstadisticas.addActionListener(this);
-		
+		this.panelGrafo.boxVisibilidad.addActionListener(this);
+		this.panelGrafo.btnCentrar.addActionListener(this);
+		this.panelGrafo.btnEliminar.addActionListener(this);
+		this.panelGrafo.btnClustering.addActionListener(this);
+		this.panelGrafo.btnEstadisticas.addActionListener(this);	
+	}
+	
+	public void iniciar() 
+	{
+		modelo.armarGrafo();
+		vista.panelDeControles.agregar(panelGrafo);
+		vista.panelDeControles.updateUI();
 	}
 	
 	@Override
@@ -59,7 +66,7 @@ public class CtrlPanelGrafo implements ActionListener
 			activarODesactivar();
 		
 		if(e.getSource() == panelGrafo.btnCentrar)
-			centrar();
+			centrarEnElMapa();
 		
 		if(e.getSource() == panelGrafo.btnEliminar)
 			eliminar();
@@ -74,24 +81,15 @@ public class CtrlPanelGrafo implements ActionListener
 	
 	private void clustering() 
 	{
-		if (!panelGrafo.txtCantClusters.getText().equals(""))
-		{
-			if(Integer.parseInt(panelGrafo.txtCantClusters.getText()) > modelo.getCoordenadas().size())
-				JOptionPane.showMessageDialog(null, "Excediste el maximo de clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+		if(numeroEsValido())
+		{		
+			modelo.clustering(Integer.parseInt(panelGrafo.txtCantClusters.getText()));
 			
-			else if(Integer.parseInt(panelGrafo.txtCantClusters.getText()) == 0)
-				JOptionPane.showMessageDialog(null, "No puede haber 0 clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+			for(MapPolygonImpl poligono : aristas) 
+				vista.mapa.removeMapPolygon(poligono);
+			aristas.clear();
 			
-			else
-			{
-				modelo.clustering(Integer.parseInt(panelGrafo.txtCantClusters.getText()));
-				
-				for(MapPolygonImpl poligono : aristas) 
-					vista.mapa.removeMapPolygon(poligono);
-				aristas.clear();
-				
-				dibujarAristas();
-			}
+			dibujarAristas();	
 		}
 	}
 	
@@ -99,25 +97,24 @@ public class CtrlPanelGrafo implements ActionListener
 	private void activarODesactivar() 
 	{
 		if(panelGrafo.boxVisibilidad.isSelected() == true)
-		{
-			for(MapMarkerDot punto : puntos)
-				punto.setVisible(true);
-			
-			for(MapPolygonImpl arista : aristas)
-				arista.setVisible(true);
-			
-			panelGrafo.boxVisibilidad.setToolTipText("Ocultar");
-		}
+			visibilidad(true);	
 		else 
-		{
-			for(MapMarkerDot punto : puntos)
-				punto.setVisible(false);
-			
-			for(MapPolygonImpl arista : aristas)
-				arista.setVisible(false);
-			
+			visibilidad(false);
+
+	}
+	
+	private void visibilidad(boolean b) 
+	{
+		for(MapMarkerDot punto : puntos)
+			punto.setVisible(b);
+		
+		for(MapPolygonImpl arista : aristas)
+			arista.setVisible(b);
+		
+		if(b == true)
+			panelGrafo.boxVisibilidad.setToolTipText("Ocultar");
+		else
 			panelGrafo.boxVisibilidad.setToolTipText("Aparecer");
-		}
 		
 		vista.mapa.updateUI();
 	}
@@ -143,8 +140,8 @@ public class CtrlPanelGrafo implements ActionListener
 		}
 	}
 	
-	//Metodo que posiciona la ubicacion del mapa en un punto del grafo
-	private void centrar() 
+	
+	private void centrarEnElMapa() 
 	{
 		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
 	}
@@ -153,10 +150,9 @@ public class CtrlPanelGrafo implements ActionListener
 	{
 		StringBuilder stats = new StringBuilder("");
 		stats.append("Cantidad de vertices: " + modelo.cantVertices() + "\n");
-		stats.append("Cantidad de Clusters: " + panelGrafo.txtCantClusters.getText() + "\n");
-		stats.append("Peso total de aristas: " + modelo.getPesoTotal() + "\n");
-		stats.append("Desviacion Estandar ~ " + modelo.getDesviacionEstandar());
-		
+		stats.append("Cantidad de Clusters: " + modelo.cantClusters() + "\n");
+		stats.append("Peso total de aristas: " + modelo.pesoTotal() + "\n");
+		stats.append("Desviacion Estandar ~ " + modelo.desviacionEstandar());
 		
 		JOptionPane.showMessageDialog(null, stats.toString(), "Estadisticas", JOptionPane.INFORMATION_MESSAGE);
 	}
@@ -183,7 +179,7 @@ public class CtrlPanelGrafo implements ActionListener
 		{
 			origen = modelo.getCoordenadas().get(i);
 				
-			for(Integer j : modelo.getGrafo().vecinos(i)) /*Recorremos sus vecinos*/
+			for(Integer j : modelo.getGrafo().vecinos(i))
 			{						
 				destino = modelo.getCoordenadas().get(j);
 				poligono = new MapPolygonImpl(Arrays.asList(origen, destino, destino));//El poligono necesita 3 puntos para dibujarse
@@ -205,4 +201,23 @@ public class CtrlPanelGrafo implements ActionListener
 		return modelo.getCoordenadas();
 	}
 
+	
+	//METODOS AUXILIARES
+	
+	private boolean numeroEsValido() 
+	{
+		if(Integer.parseInt(panelGrafo.txtCantClusters.getText()) > modelo.getCoordenadas().size())
+		{
+			JOptionPane.showMessageDialog(null, "Excediste el maximo de clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		if(Integer.parseInt(panelGrafo.txtCantClusters.getText()) == 0)
+		{
+			JOptionPane.showMessageDialog(null, "No puede haber 0 clusters.", "Error", JOptionPane.WARNING_MESSAGE);
+			return false;
+		}
+		
+		return true;		
+	}
 }

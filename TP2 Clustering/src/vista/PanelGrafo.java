@@ -30,21 +30,19 @@ import modelo.Modelo;
 
 public class PanelGrafo extends JPanel 
 {
-
 	public JLabel lblNombre;
 	public JTextField txtCantClusters;
 	public JCheckBox boxVisibilidad;
 	public JButton btnCentrar, btnEliminar, btnClustering, btnEstadisticas;
 	
-	public Color gris2;
+	public Color gris;
 	
 	public PanelGrafo(String nombre) 
 	{
-		gris2 = new Color(62, 54, 54);
+		gris = new Color(62, 54, 54);
 		
-	
 		this.setBorder(new MatteBorder(0, 0, 1, 0, Color.WHITE));
-		this.setBackground(gris2);
+		this.setBackground(gris);
 		this.setLayout(null);
 		
 		iniComponentes(nombre);
@@ -89,7 +87,7 @@ public class PanelGrafo extends JPanel
 		this.add(btnEstadisticas);
 		
 		txtCantClusters = new JTextField();
-		txtCantClusters.setBackground(gris2.brighter());
+		txtCantClusters.setBackground(gris.brighter());
 		txtCantClusters.setForeground(Color.WHITE);
 		txtCantClusters.setText("1");
 		txtCantClusters.addKeyListener(new KeyAdapter() 
@@ -124,7 +122,7 @@ public class PanelGrafo extends JPanel
 			{
 				JButton boton = (JButton) e.getSource();
 			
-				boton.setBackground(gris2.brighter());
+				boton.setBackground(gris.brighter());
 			}
 		
 			@Override
