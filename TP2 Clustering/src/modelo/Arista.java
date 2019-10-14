@@ -13,17 +13,17 @@ public class Arista
 		this.vertice2 = vertice2;
 	}
 
-	public int getVertice1() 
+	public int vertice1() 
 	{
 		return vertice1;
 	}
 
-	public int getVertice2() 
+	public int vertice2() 
 	{
 		return vertice2;
 	}
 
-	public double getPeso() 
+	public double peso() 
 	{
 		return peso;
 	}

@@ -18,7 +18,7 @@ import java.awt.Toolkit;
 
 public class VentanaExportar extends JDialog
 {
-	private VentanaPrincipal vPrincipal;
+	public VentanaPrincipal vPrincipal;
 	
 	public JLabel lblMensaje;
 	public JButton btnCancelar;

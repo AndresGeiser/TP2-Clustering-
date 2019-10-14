@@ -6,7 +6,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 public class Modelo 
 {
 	private Grafo grafo;
-	private ArrayList<Arista> aristasGrafoOriginal = new ArrayList<Arista>();
+	private ArrayList<Arista> aristasGrafoOriginal;
 	private ArrayList<Coordinate> coordenadas;
 	
 	private double pesoTotal;
@@ -29,7 +29,7 @@ public class Modelo
 		
 		armarGrafoCompleto();
 		
-		grafoArbolMinimo();
+		armarAGM();
 		
 		actualizarDatos(aristasGrafoOriginal, 1);
 		
@@ -49,7 +49,7 @@ public class Modelo
 	}
 	
 	
-	private void grafoArbolMinimo() 
+	private void armarAGM() 
 	{
 		AGM grafoAGM = new AGM(grafo);
 		grafo = grafoAGM.getGrafoAGM();
@@ -70,11 +70,11 @@ public class Modelo
 	private void armarGrafoOriginal() 
 	{
 		for(Arista arista : aristasGrafoOriginal)
-			grafo.agregarArista(arista.getVertice1(), arista.getVertice2(), arista.getPeso());
+			grafo.agregarArista(arista.vertice1(), arista.vertice2(), arista.peso());
 		
 	}
 	
-	private void eliminarAristasMayores(ArrayList<Arista> aristas, int n)
+	private void eliminarAristasMayores(ArrayList<Arista> aristas, int n)//'n' cantidad de aristas a eliminar
 	{
 		Arista aristaMaxima;
 		for(int i=0; i < n ; i++) 
@@ -82,10 +82,10 @@ public class Modelo
 			aristaMaxima = aristas.get(0);
 			
 			for(Arista arista : aristas)
-				if(arista.getPeso() > aristaMaxima.getPeso())
+				if(arista.peso() > aristaMaxima.peso())
 					aristaMaxima = arista;
 	
-			grafo.borrarArista(aristaMaxima.getVertice1(), aristaMaxima.getVertice2());
+			grafo.borrarArista(aristaMaxima.vertice1(), aristaMaxima.vertice2());
 			aristas.remove(aristaMaxima);
 		}
 	}
@@ -101,10 +101,10 @@ public class Modelo
 	{
 		pesoTotal = 0;
 		for(Arista arista: aristas)
-			pesoTotal += arista.getPeso();
+			pesoTotal += arista.peso();
 	}
 	
-	public ArrayList<Coordinate> getCoordenadas() 
+	public ArrayList<Coordinate> coordenadas() 
 	{
 		return coordenadas;
 	}

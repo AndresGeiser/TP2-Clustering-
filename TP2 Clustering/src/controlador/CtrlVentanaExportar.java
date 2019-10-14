@@ -95,7 +95,7 @@ public class CtrlVentanaExportar implements ActionListener
 				fw = new FileWriter(archivo);
 				bw = new BufferedWriter(fw);
 				
-				for(Coordinate coordenada : panel.getCoordenadas()) 
+				for(Coordinate coordenada : panel.coordenadas()) 
 				{
 					bw.write(coordenada.getLat() + " " + coordenada.getLon());
 					bw.newLine();

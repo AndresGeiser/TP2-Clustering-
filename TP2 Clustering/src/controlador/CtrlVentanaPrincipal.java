@@ -1,6 +1,7 @@
 package controlador;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -218,6 +219,10 @@ public class CtrlVentanaPrincipal implements ActionListener
 	
 	private void exportar() 
 	{
+		verificarGrafosBorrados();
+		
+		System.out.println(ctrlPanelesGrafos.size());
+		
 		VentanaExportar vExportar = new VentanaExportar(vista , true);
 		
 		CtrlVentanaExportar ctrlVentanaExportar = new CtrlVentanaExportar(vExportar, ctrlPanelesGrafos);
@@ -226,9 +231,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 	
 	private void colocarPanelGrafo(String nombre) 
 	{		
-		PanelGrafo panelGrafo = new PanelGrafo(nombre);
-		
-		CtrlPanelGrafo ctrlPanelGrafo = new CtrlPanelGrafo(modelo, vista, panelGrafo);	
+		CtrlPanelGrafo ctrlPanelGrafo = new CtrlPanelGrafo(modelo, vista, new PanelGrafo(nombre));	
 		ctrlPanelGrafo.iniciar();
 		
 		ctrlPanelesGrafos.add(ctrlPanelGrafo);
@@ -262,6 +265,18 @@ public class CtrlVentanaPrincipal implements ActionListener
 		}	
 	}
 	
+	private void verificarGrafosBorrados() 
+	{
+		for(int i=0; i < ctrlPanelesGrafos.size(); i++)
+		{
+			if(seBorro(ctrlPanelesGrafos.get(i))) 
+			{
+				ctrlPanelesGrafos.remove(ctrlPanelesGrafos.get(i));
+				i--;
+			}
+		}
+	}
+	
 	
 	//METODOS AUXILIARES
 	private boolean estaMarcada(MapMarkerDot coordenada) 
@@ -293,5 +308,21 @@ public class CtrlVentanaPrincipal implements ActionListener
 		else
 			boton.setForeground(Color.GRAY);
 		
+	}
+	
+	private boolean seBorro(CtrlPanelGrafo ctrlPanelGrafo) 
+	{
+		boolean seBorro = true;
+		Component[] componentes = vista.panelDeControles.getComponents();
+		
+		PanelGrafo panelGrafo;
+		for(Component componente : componentes ) 
+		{
+			panelGrafo = (PanelGrafo) componente;
+			
+			if(panelGrafo.lblNombre.getText().equals(ctrlPanelGrafo.getNombre()))
+				seBorro = false;
+		}
+		return seBorro;
 	}
 }

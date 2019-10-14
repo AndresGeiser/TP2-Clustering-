@@ -27,8 +27,8 @@ public class CalculosAuxiliares
 		
 		for(Arista arista: aristas) //Se realiza la sumatoria de todos los numeros
 		{
-			numeros.add(arista.getPeso());
-			suma += arista.getPeso();
+			numeros.add(arista.peso());
+			suma += arista.peso();
 		}
 		
 		int conteo = numeros.size();   //se obtiene la cantidad de numeros

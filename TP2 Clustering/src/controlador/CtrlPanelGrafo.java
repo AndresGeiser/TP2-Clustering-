@@ -33,7 +33,7 @@ public class CtrlPanelGrafo implements ActionListener
 		this.modelo = modelo;
 		this.vista = vista;
 		this.panelGrafo = panelGrafo;
-		this.panelGrafo.txtCantClusters.setToolTipText("Max: " + modelo.getCoordenadas().size());
+		this.panelGrafo.txtCantClusters.setToolTipText("Max: " + modelo.coordenadas().size());
 		
 		Random n = new Random();
 		int r = n.nextInt(256);
@@ -92,7 +92,7 @@ public class CtrlPanelGrafo implements ActionListener
 	
 	private void centrarEnElMapa() 
 	{
-		vista.mapa.setDisplayPosition(modelo.getCoordenadas().get(0), 13);
+		vista.mapa.setDisplayPosition(modelo.coordenadas().get(0), 13);
 	}
 	
 	//Metodo que elimina el grafo 
@@ -170,7 +170,7 @@ public class CtrlPanelGrafo implements ActionListener
 	private void dibujarPuntos() 
 	{
 		MapMarkerDot punto;
-		for(Coordinate coordenada : modelo.getCoordenadas()) 
+		for(Coordinate coordenada : modelo.coordenadas()) 
 		{
 			punto = new MapMarkerDot(coordenada);
 			punto.setBackColor(colorGrafo);
@@ -185,13 +185,13 @@ public class CtrlPanelGrafo implements ActionListener
 		Coordinate destino;
 		MapPolygonImpl poligono;
 
-		for(int i=0; i < modelo.getCoordenadas().size(); i++) 
+		for(int i=0; i < modelo.coordenadas().size(); i++) 
 		{
-			origen = modelo.getCoordenadas().get(i);
+			origen = modelo.coordenadas().get(i);
 				
 			for(Integer j : modelo.getGrafo().vecinos(i))
 			{						
-				destino = modelo.getCoordenadas().get(j);
+				destino = modelo.coordenadas().get(j);
 				poligono = new MapPolygonImpl(Arrays.asList(origen, destino, destino));//El poligono necesita 3 puntos para dibujarse
 				poligono.setColor(colorGrafo.darker());
 			    vista.mapa.addMapPolygon(poligono);                     
@@ -206,9 +206,9 @@ public class CtrlPanelGrafo implements ActionListener
 		return panelGrafo.lblNombre.getText();
 	}
 	
-	public ArrayList<Coordinate> getCoordenadas()
+	public ArrayList<Coordinate> coordenadas()
 	{
-		return modelo.getCoordenadas();
+		return modelo.coordenadas();
 	}
 
 	
