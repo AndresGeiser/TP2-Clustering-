@@ -42,7 +42,7 @@ public class CtrlVentanaExportar implements ActionListener
 				elegirDirectorio();
 			
 			else	
-				JOptionPane.showMessageDialog(null, "Selecione alguno !!", "Atencion", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Seleccione alguno !!", "Atencion", JOptionPane.WARNING_MESSAGE);
 			
 		}
 		
