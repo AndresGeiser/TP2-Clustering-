@@ -10,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -26,50 +25,50 @@ import vista.VentanaPrincipal;
 public class CtrlVentanaPrincipal implements ActionListener
 {
 	private Modelo modelo;
-	private VentanaPrincipal vista;
+	private VentanaPrincipal vPrincipal;
 	
 	private ArrayList<MapMarkerDot> marcasTemporales;
 	private ArrayList<CtrlPanelGrafo> ctrlPanelesGrafos;
 	
-	public CtrlVentanaPrincipal(Modelo modelo, VentanaPrincipal vista) 
+	public CtrlVentanaPrincipal(Modelo modelo, VentanaPrincipal vPrincipal) 
 	{
 		this.modelo = modelo;
-		this.vista = vista;
+		this.vPrincipal = vPrincipal;
 		marcasTemporales = new ArrayList<>();
 		
 		ctrlPanelesGrafos = new ArrayList<CtrlPanelGrafo>();
 	
-		this.vista.btnImportar.addActionListener(this);
-		this.vista.btnExportar.addActionListener(this);
-		this.vista.btnNuevo.addActionListener(this);
-		this.vista.btnGuardar.addActionListener(this);
-		this.vista.btnCancelar.addActionListener(this);
-		this.vista.btnDeshacer.addActionListener(this);
+		this.vPrincipal.btnImportar.addActionListener(this);
+		this.vPrincipal.btnExportar.addActionListener(this);
+		this.vPrincipal.btnNuevo.addActionListener(this);
+		this.vPrincipal.btnGuardar.addActionListener(this);
+		this.vPrincipal.btnCancelar.addActionListener(this);
+		this.vPrincipal.btnDeshacer.addActionListener(this);
 		iniInteraccionConMapa();
 	}
 	
 	private void iniInteraccionConMapa() 
 	{
-		this.vista.mapa.addMouseListener(new MouseAdapter() 
+		this.vPrincipal.mapa.addMouseListener(new MouseAdapter() 
 		{
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
-				if(!vista.btnNuevo.isEnabled()) 
+				if(!vPrincipal.btnNuevo.isEnabled()) 
 				{
 					if (e.getButton() == MouseEvent.BUTTON1)
 					{
-						Coordinate coord = (Coordinate) vista.mapa.getPosition(e.getPoint());
+						Coordinate coord = (Coordinate) vPrincipal.mapa.getPosition(e.getPoint());
 						MapMarkerDot marca = new MapMarkerDot(coord);
 						
 						if(!estaMarcada(marca))
 						{	
-							vista.mapa.addMapMarker(marca);
+							vPrincipal.mapa.addMapMarker(marca);
 							marcasTemporales.add(marca);
 						}
 						
-						setBoton(vista.btnGuardar, true);
-						setBoton(vista.btnDeshacer, true);
+						activar(vPrincipal.btnGuardar);
+						activar(vPrincipal.btnDeshacer);
 	
 					}
 				}	
@@ -78,85 +77,83 @@ public class CtrlVentanaPrincipal implements ActionListener
 			@Override
 			public void mouseEntered(MouseEvent e) 
 			{
-				if(!vista.btnNuevo.isEnabled())
-					vista.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));		
+				if(!vPrincipal.btnNuevo.isEnabled())
+					vPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));		
 			}
 			
 			@Override
 			public void mouseExited(MouseEvent e) 
 			{
-				if(!vista.btnNuevo.isEnabled())
-					vista.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				if(!vPrincipal.btnNuevo.isEnabled())
+					vPrincipal.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			}
 		});
 	}
 
 	public void iniciar() 
 	{
-		vista.setVisible(true);
+		vPrincipal.setVisible(true);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
-		if(e.getSource() == vista.btnImportar )
+		if(e.getSource() == vPrincipal.btnImportar )
 			buscarArchivos();;
 		
-		if(e.getSource() == vista.btnExportar)
+		if(e.getSource() == vPrincipal.btnExportar)
 			exportar();
 		
-		if(e.getSource() == vista.btnNuevo) 
+		if(e.getSource() == vPrincipal.btnNuevo) 
 		{
-			setBoton(vista.btnNuevo, false);
-			setBoton(vista.btnImportar, false);
-			setBoton(vista.btnExportar, false);
-			setBoton(vista.btnCancelar, true);
+			desactivar(vPrincipal.btnNuevo);
+			desactivar(vPrincipal.btnImportar);
+			desactivar(vPrincipal.btnExportar);
+			activar(vPrincipal.btnCancelar);
 		}
 		
-		if(e.getSource() == vista.btnCancelar) 
+		if(e.getSource() == vPrincipal.btnCancelar) 
 		{
-			setBoton(vista.btnNuevo, true);
-			setBoton(vista.btnImportar, true);
-			setBoton(vista.btnCancelar, false);
-			setBoton(vista.btnDeshacer, false);
-			setBoton(vista.btnGuardar, false);
+			activar(vPrincipal.btnNuevo);
+			activar(vPrincipal.btnImportar);
+			desactivar(vPrincipal.btnCancelar);
+			desactivar(vPrincipal.btnDeshacer);
+			desactivar(vPrincipal.btnGuardar);
 			
-			if(vista.panelDeControles.getComponents().length > 0)
-				setBoton(vista.btnExportar, true);
+			if(vPrincipal.panelDeControles.getComponents().length > 0)
+				activar(vPrincipal.btnExportar);
 			
 			borrarMarcasTemporales();
 		}
 		
-		if(e.getSource() == vista.btnGuardar) 
+		if(e.getSource() == vPrincipal.btnGuardar) 
 		{
-			String nombre = JOptionPane.showInputDialog("Nombre: ");
+			String nombre = elegirNombre();
 				
-			if(nombre != null) //Chequeamos si acepto
+			if(nombre != null)
 			{
-				setBoton(vista.btnNuevo, true);
-				setBoton(vista.btnImportar, true);
-				setBoton(vista.btnCancelar, false);
-				setBoton(vista.btnGuardar, false);
-				setBoton(vista.btnDeshacer, false);		
-				
+				activar(vPrincipal.btnNuevo);
+				activar(vPrincipal.btnImportar);
+				activar(vPrincipal.btnExportar);
+				desactivar(vPrincipal.btnCancelar);
+				desactivar(vPrincipal.btnDeshacer);
+				desactivar(vPrincipal.btnGuardar);
+					
 				for(MapMarkerDot marca : marcasTemporales)
 					modelo.agregarCoordenada(marca.getCoordinate());
 			
 				borrarMarcasTemporales();
 				
-				if(nombre.equals(""))
-					nombre = "Mi grafo " + vista.panelDeControles.getComponents().length;
-				
 				colocarPanelGrafo(nombre);
 			}
 		}
 		
-		if(e.getSource() == vista.btnDeshacer)
+		if(e.getSource() == vPrincipal.btnDeshacer)
 			borrarUltimaMarca();
 				
 			
 	}
-	
+
 	private void buscarArchivos() 
 	{
 		JFileChooser jf = new JFileChooser();
@@ -174,15 +171,15 @@ public class CtrlVentanaPrincipal implements ActionListener
 		{
 			String latitud;
 			String longitud;	
-			String linea;
 			boolean llegoAlEspacio;
 			BufferedReader bf;
+			String linea;
 			
 			for(File archivo : archivos)
 			{
 				 bf = new BufferedReader(new FileReader(archivo));
 			
-				while(!(linea=bf.readLine()).equals(""))
+				while(!(linea = bf.readLine()).equals(""))
 				{
 					llegoAlEspacio = false;
 					latitud = "";
@@ -200,7 +197,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 						else
 							longitud += linea.charAt(i);
 					}
-					
+				
 					modelo.agregarCoordenada(new Coordinate(Double.parseDouble(latitud), Double.parseDouble(longitud)));
 				}
 				
@@ -211,9 +208,12 @@ public class CtrlVentanaPrincipal implements ActionListener
 				colocarPanelGrafo(nombre);
 			}
 		}
-		catch (IOException ioe)
+		catch (Exception e)
 		{
-			ioe.printStackTrace();
+			if(archivos.length > 1)
+				JOptionPane.showMessageDialog(null, "Es posible que alguno de los archivos no fue creado por esta aplicacion", "Error al importar", JOptionPane.ERROR_MESSAGE);	
+			else
+				JOptionPane.showMessageDialog(null, "Es posible que no sea un archivo creado por esta aplicacion", "Error al importar", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
@@ -221,9 +221,7 @@ public class CtrlVentanaPrincipal implements ActionListener
 	{
 		verificarGrafosBorrados();
 		
-		System.out.println(ctrlPanelesGrafos.size());
-		
-		VentanaExportar vExportar = new VentanaExportar(vista , true);
+		VentanaExportar vExportar = new VentanaExportar(vPrincipal , true);
 		
 		CtrlVentanaExportar ctrlVentanaExportar = new CtrlVentanaExportar(vExportar, ctrlPanelesGrafos);
 		ctrlVentanaExportar.iniciar();
@@ -231,12 +229,10 @@ public class CtrlVentanaPrincipal implements ActionListener
 	
 	private void colocarPanelGrafo(String nombre) 
 	{		
-		CtrlPanelGrafo ctrlPanelGrafo = new CtrlPanelGrafo(modelo, vista, new PanelGrafo(nombre));	
+		CtrlPanelGrafo ctrlPanelGrafo = new CtrlPanelGrafo(modelo, vPrincipal, new PanelGrafo(nombre));	
 		ctrlPanelGrafo.iniciar();
 		
 		ctrlPanelesGrafos.add(ctrlPanelGrafo);
-		
-		setBoton(vista.btnExportar, true);
 		
 		modelo = new Modelo();
 		
@@ -245,36 +241,67 @@ public class CtrlVentanaPrincipal implements ActionListener
 	private void borrarMarcasTemporales() 
 	{
 		for(MapMarkerDot marca : marcasTemporales)
-			vista.mapa.removeMapMarker(marca);
+			vPrincipal.mapa.removeMapMarker(marca);
 		marcasTemporales.clear();
 	}
 	
 	private void borrarUltimaMarca() 
 	{
-		if(hayMarcas()) 
-		{
-			int i = marcasTemporales.size() - 1;
-			vista.mapa.removeMapMarker(marcasTemporales.get(i));
-			marcasTemporales.remove(i);			
+		int i = marcasTemporales.size() - 1;
+		vPrincipal.mapa.removeMapMarker(marcasTemporales.get(i));
+		marcasTemporales.remove(i);			
 		
-			if(!hayMarcas())
-			{
-				setBoton(vista.btnGuardar, false);
-				setBoton(vista.btnDeshacer, false);
-			}
+		if(!hayMarcas())
+		{
+			desactivar(vPrincipal.btnGuardar);
+			desactivar(vPrincipal.btnDeshacer);
 		}	
 	}
 	
-	private void verificarGrafosBorrados() 
+	private void verificarGrafosBorrados()//borra los controladores de los grafos que ya han sido borrados 
 	{
 		for(int i=0; i < ctrlPanelesGrafos.size(); i++)
 		{
-			if(seBorro(ctrlPanelesGrafos.get(i))) 
+			if(!existeGrafo(ctrlPanelesGrafos.get(i).getNombre())) 
 			{
 				ctrlPanelesGrafos.remove(ctrlPanelesGrafos.get(i));
 				i--;
 			}
 		}
+	}
+	
+	private void activar(JButton boton) 
+	{
+		boton.setEnabled(true);
+		boton.setForeground(Color.WHITE);
+		boton.setBackground(vPrincipal.rojo);
+	}
+	
+	private void desactivar(JButton boton) 
+	{
+		boton.setEnabled(false);
+		boton.setForeground(Color.GRAY);
+	}
+	
+	private String elegirNombre() 
+	{
+		String nombre = JOptionPane.showInputDialog("Introduzca un nombre para el grafo: ");
+		
+		if(nombre != null) 
+		{
+			while(existeGrafo(nombre) || nombre.equals(""))
+			{
+				if(nombre.equals(""))
+					nombre = JOptionPane.showInputDialog("Por favor, introduzca un nombre para el grafo: ");
+				else
+					nombre = JOptionPane.showInputDialog("El grafo con el nombre '" + nombre + "' ya existe.\nColoque otro: ");
+				
+				if(nombre == null)
+					break;
+			}
+		}
+		
+		return nombre;
 	}
 	
 	
@@ -294,35 +321,18 @@ public class CtrlVentanaPrincipal implements ActionListener
 		return false;
 	}
 	
-	
-	private void setBoton(JButton boton , boolean b)//Activa o desactiva el boton 
+	private boolean existeGrafo(String nombre) 
 	{
-		boton.setEnabled(b);
-		
-		if(b == true) 
-		{
-			boton.setForeground(Color.WHITE);
-			boton.setBackground(vista.rojo);
-		}
-		
-		else
-			boton.setForeground(Color.GRAY);
-		
-	}
-	
-	private boolean seBorro(CtrlPanelGrafo ctrlPanelGrafo) 
-	{
-		boolean seBorro = true;
-		Component[] componentes = vista.panelDeControles.getComponents();
+		Component[] componentes = vPrincipal.panelDeControles.getComponents();
 		
 		PanelGrafo panelGrafo;
 		for(Component componente : componentes ) 
 		{
 			panelGrafo = (PanelGrafo) componente;
 			
-			if(panelGrafo.lblNombre.getText().equals(ctrlPanelGrafo.getNombre()))
-				seBorro = false;
+			if(panelGrafo.lblNombre.getText().equals(nombre))
+				return true;
 		}
-		return seBorro;
+		return false;
 	}
 }

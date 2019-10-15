@@ -79,7 +79,7 @@ public class CtrlVentanaExportar implements ActionListener
 			FileWriter fw;
 			BufferedWriter bw;
 			
-			for(CtrlPanelGrafo panel : panelesElegidos()) 
+			for(CtrlPanelGrafo panel : grafosElegidos()) 
 			{
 				archivo = new File(directorio + "\\" + panel.getNombre() + ".txt");
 				
@@ -111,15 +111,15 @@ public class CtrlVentanaExportar implements ActionListener
 		}
 	}
 	
-	private ArrayList<CtrlPanelGrafo> panelesElegidos() 
+	private ArrayList<CtrlPanelGrafo> grafosElegidos() 
 	{
-		ArrayList<CtrlPanelGrafo> paneles = new ArrayList<CtrlPanelGrafo>();
+		ArrayList<CtrlPanelGrafo> grafosElegidos = new ArrayList<CtrlPanelGrafo>();
 
 		for(int i=0; i < vExportar.opciones.size(); i++) 
 			if(vExportar.opciones.get(i).isSelected())
-				paneles.add(controladoresGrafos.get(i));
+				grafosElegidos.add(controladoresGrafos.get(i));
 		
-		return paneles;
+		return grafosElegidos;
 	}
 	
 	

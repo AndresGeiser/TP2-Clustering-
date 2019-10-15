@@ -130,6 +130,7 @@ public class CtrlPanelGrafo implements ActionListener
 	private void verEstadisticas()
 	{
 		StringBuilder stats = new StringBuilder("");
+		
 		stats.append("Cantidad de vertices: " + modelo.cantVertices() + "\n");
 		stats.append("Cantidad de Clusters: " + modelo.cantClusters() + "\n");
 		stats.append("Peso total de aristas: " + modelo.pesoTotal() + "\n");
