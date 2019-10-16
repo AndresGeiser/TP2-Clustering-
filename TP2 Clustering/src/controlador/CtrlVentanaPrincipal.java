@@ -187,6 +187,9 @@ public class CtrlVentanaPrincipal implements ActionListener
 					
 					for(int i=0; i < linea.length(); i++) 
 					{		
+						if(i == 0 && linea.charAt(i) == ' ') //Condicion Agregada para el txt 4
+							i++;
+						
 						if(llegoAlEspacio == false) 
 						{
 							if(linea.charAt(i) != ' ')
@@ -233,6 +236,8 @@ public class CtrlVentanaPrincipal implements ActionListener
 		ctrlPanelGrafo.iniciar();
 		
 		ctrlPanelesGrafos.add(ctrlPanelGrafo);
+		
+		activar(vPrincipal.btnExportar);
 		
 		modelo = new Modelo();
 		
